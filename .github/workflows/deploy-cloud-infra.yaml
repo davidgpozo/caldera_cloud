@@ -3,14 +3,15 @@ on: [workflow_dispatch]
 #  push:
 #    paths:
 #      - userguide.md
-inputs:
-  numOctocats:
-    description: 'Number of Octocats'
-    required: false
-    default: '1'
-  octocatEyeColor:
-    description: 'Eye color of the Octocats'
-    required: true
+  workflow_call:
+    inputs:
+      numOctocats:
+        description: 'Number of Octocats'
+        required: false
+        default: '1'
+      octocatEyeColor:
+        description: 'Eye color of the Octocats'
+        required: true
 jobs:
   publish:
     runs-on: ubuntu-latest
