@@ -9,4 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create release
-        sh: echo hola pepe
+        run: echo hola pepe
