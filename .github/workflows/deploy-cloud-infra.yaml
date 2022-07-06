@@ -3,10 +3,17 @@ on: [workflow_dispatch]
 #  push:
 #    paths:
 #      - userguide.md
-
+inputs:
+  numOctocats:
+    description: 'Number of Octocats'
+    required: false
+    default: '1'
+  octocatEyeColor:
+    description: 'Eye color of the Octocats'
+    required: true
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - name: Create release
-        run: echo hola pepe
+        run: echo hola ${{ inputs.numOctocats }} ${{ inputs.octocatEyeColor }}
