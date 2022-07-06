@@ -62,6 +62,8 @@ on:
       environment:
         description: 'Environment to run tests against'
         type: environment
+        default: 'dev'
+        type: choice
         required: true
         options:
         - dev
