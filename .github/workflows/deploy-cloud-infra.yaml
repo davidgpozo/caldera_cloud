@@ -1,8 +1,8 @@
 name: hola mundo japonero
-#on: [workflow_dispatch]
-##  push:
-##    paths:
-##      - userguide.md
+on: [workflow_dispatch]
+#  push:
+#    paths:
+#      - userguide.md
 #  workflow_call:
 #    inputs:
 #      numOctocats:
@@ -12,28 +12,29 @@ name: hola mundo japonero
 #      octocatEyeColor:
 #        description: 'Eye color of the Octocats'
 #        required: true
-#jobs:
-#  publish:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Create release
-#        run: echo hola ${{ inputs.numOctocats }} ${{ inputs.octocatEyeColor }}
-#
-on:
-  workflow_call:
-    inputs:
-      username:
-        required: true
-        type: string
-    secrets:
-      envPAT:
-        required: true
 jobs:
-  reusable_workflow_job:
+  publish:
     runs-on: ubuntu-latest
-    environment: production
     steps:
-      - uses: ./.github/workflows/my-action
-        with:
-          username: ${{ inputs.username }}
-          token: ${{ secrets.envPAT }}
+      - name: Create release
+        run: echo hola pepe
+#        run: echo hola ${{ inputs.numOctocats }} ${{ inputs.octocatEyeColor }}
+
+#on:
+#  workflow_call:
+#    inputs:
+#      username:
+#        required: true
+#        type: string
+#    secrets:
+#      envPAT:
+#        required: true
+#jobs:
+#  reusable_workflow_job:
+#    runs-on: ubuntu-latest
+#    environment: production
+#    steps:
+#      - uses: ./.github/workflows/my-action
+#        with:
+#          username: ${{ inputs.username }}
+#          token: ${{ secrets.envPAT }}
