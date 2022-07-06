@@ -1,5 +1,5 @@
 name: hola mundo japonero
-#on: [workflow_dispatch]
+on: [workflow_dispatch]
 #  push:
 #    paths:
 #      - userguide.md
@@ -39,7 +39,7 @@ name: hola mundo japonero
 #          username: ${{ inputs.username }}
 #          token: ${{ secrets.envPAT }}
 
-on:
+#on:
   workflow_dispatch:
     inputs:
       logLevel:
