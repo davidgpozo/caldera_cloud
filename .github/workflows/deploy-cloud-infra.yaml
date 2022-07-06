@@ -1,4 +1,4 @@
-#name: hola mundo japonero
+name: hola mundo japonero
 #on: [workflow_dispatch]
 #  push:
 #    paths:
@@ -39,41 +39,40 @@
 #          username: ${{ inputs.username }}
 #          token: ${{ secrets.envPAT }}
 
-##on:
-#  workflow_dispatch:
-#    inputs:
-#      logLevel:
-#        description: 'Log level'
-#        required: true
-#        default: 'warning'
-#        type: choice
-#        options:
-#        - info
-#        - warning
-#        - debug
-#      print_tags:
-#        description: 'True to print to STDOUT'
-#        required: true
-#        type: boolean
-#      tags:
-#        description: 'Test scenario tags'
-#        required: false
-#        type: string
-#      environment:
-#        description: 'Environment to run tests against'
-#        type: environment
-#        default: 'dev'
-#        type: choice
-#        required: true
-#        options:
-#        - dev
-#        - pre
-#        - pro
-#
-#jobs:
-#  print-tag:
-#    runs-on: ubuntu-latest
-#    if:  ${{ inputs.print_tags }}
-#    steps:
-#      - name: Print the input tag to STDOUT
-#        run: echo  The tags are ${{ inputs.tags }}
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+      print_tags:
+        description: 'True to print to STDOUT'
+        required: true
+        type: boolean
+      tags:
+        description: 'Test scenario tags'
+        required: false
+        type: string
+      environment:
+        description: 'Environment to run tests against'
+        type: choice
+        default: 'dev'
+        required: true
+        options:
+        - dev
+        - pre
+        - pro
+
+jobs:
+  print-tag:
+    runs-on: ubuntu-latest
+    if:  ${{ inputs.print_tags }}
+    steps:
+      - name: Print the input tag to STDOUT
+        run: echo  The tags are ${{ inputs.tags }}
