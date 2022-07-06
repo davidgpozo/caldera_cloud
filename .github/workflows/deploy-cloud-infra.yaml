@@ -1,20 +1,37 @@
 name: hola mundo japonero
-on: [workflow_dispatch]
-#  push:
-#    paths:
-#      - userguide.md
+#on: [workflow_dispatch]
+##  push:
+##    paths:
+##      - userguide.md
+#  workflow_call:
+#    inputs:
+#      numOctocats:
+#        description: 'Number of Octocats'
+#        required: false
+#        default: '1'
+#      octocatEyeColor:
+#        description: 'Eye color of the Octocats'
+#        required: true
+#jobs:
+#  publish:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Create release
+#        run: echo hola ${{ inputs.numOctocats }} ${{ inputs.octocatEyeColor }}
+#
+on:
   workflow_call:
     inputs:
-      numOctocats:
-        description: 'Number of Octocats'
+      username:
+        description: 'A username passed from the caller workflow'
+        default: 'john-doe'
         required: false
-        default: '1'
-      octocatEyeColor:
-        description: 'Eye color of the Octocats'
-        required: true
+        type: string
+
 jobs:
-  publish:
+  print-username:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Create release
-        run: echo hola ${{ inputs.numOctocats }} ${{ inputs.octocatEyeColor }}
+      - name: Print the input name to STDOUT
+        run: echo The username is ${{ inputs.username }}
