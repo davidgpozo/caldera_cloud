@@ -12,12 +12,12 @@ on: [workflow_dispatch]
 #      octocatEyeColor:
 #        description: 'Eye color of the Octocats'
 #        required: true
-jobs:
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create release
-        run: echo hola pepe
+#jobs:
+#  publish:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Create release
+#        run: echo hola pepe
 #        run: echo hola ${{ inputs.numOctocats }} ${{ inputs.octocatEyeColor }}
 
 #on:
