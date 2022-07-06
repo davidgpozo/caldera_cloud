@@ -1,0 +1,12 @@
+name: hola mundo japonero
+on: [workflow_dispatch]
+#  push:
+#    paths:
+#      - userguide.md
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create release
+        sh: echo hola pepe
