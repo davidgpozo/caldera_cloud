@@ -23,15 +23,17 @@ on:
   workflow_call:
     inputs:
       username:
-        description: 'A username passed from the caller workflow'
-        default: 'john-doe'
         required: true
         type: string
-
+    secrets:
+      envPAT:
+        required: true
 jobs:
-  print-username:
+  reusable_workflow_job:
     runs-on: ubuntu-latest
-
+    environment: production
     steps:
-      - name: Print the input name to STDOUT
-        run: echo The username is ${{ inputs.username }}
+      - uses: ./.github/workflows/my-action
+        with:
+          username: ${{ inputs.username }}
+          token: ${{ secrets.envPAT }}
