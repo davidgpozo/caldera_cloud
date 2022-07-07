@@ -60,8 +60,7 @@ jobs:
       - name: Terraform plan
         run: |
           cd ${{ env.TF_DATA_DIR }}
-          terraform plan  -no-color -target=aws_instance.caldera_server -detailed-exitcode -out=deploy.tfplan
-          exitcode=$?
+          terraform plan  -no-color -target=aws_instance.caldera_server -detailed-exitcode -out=deploy.tfplan ||  exitcode=$?
           if [[ $exitcode -eq 2 ]]; then
             echo '::set-output name=planHasChanges::true'
             exit 0
