@@ -54,6 +54,8 @@ jobs:
         run: cd $GITHUB_WORKSPACE/AWS_infra && terraform init -input=false
       - name: Terraform validation
         run: terraform validate
-#      - name: Terraform plan
-#        run: terraform plan -var-file=terraform.tfvars -no-color -out=plan.out -target=aws_instance.caldera_server -detailed-exitcode
+      - name: Terraform plan
+        run: terraform plan -var-file=terraform.tfvars -no-color -out=plan.out -target=aws_instance.caldera_server -detailed-exitcode
+      - name: Listar los ficheros
+        run: ls -lart $GITHUB_WORKSPACE/AWS_infra
 
