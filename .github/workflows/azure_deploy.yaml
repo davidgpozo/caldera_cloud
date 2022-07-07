@@ -11,23 +11,26 @@ on:
         - info
         - warning
         - debug
-      tags:
-        description: 'Set of TAGS space separated'
+      print_tags:
+        description: 'True to print to STDOUT'
         required: true
         type: boolean
       tags:
         description: 'Test scenario tags'
-        required: true
+        required: false
         type: string
-#      environment:
-#        description: 'Environment to run tests against'
-#        type: environment
-#        required: true
+      environment:
+        description: 'Environment to run tests against'
+        type: enviroment
+        required: false
 
 jobs:
   print-tag:
     runs-on: ubuntu-latest
+#    if:  ${{ inputs.print_tags }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
       - name: Print the input tag to STDOUT
         run: echo  The tags are ${{ inputs.tags }}
       - name: Print otro

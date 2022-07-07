@@ -31,5 +31,11 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - name: Print the input tag to STDOUT
+      - name: Listar los ficheros
         run: ls -lart
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.4
+      - name: Verify Terraform version
+        run: terraform --version
