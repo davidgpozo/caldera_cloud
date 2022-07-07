@@ -33,10 +33,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-      - name: tesy
-        run: pwd
-      - name: Listar los ficheros
-        run: ls -d $PWD/*
       - name: enviroment vars
         run: env
       - name: Install Terraform
@@ -51,14 +47,16 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          echo hola ${{ env.TF_DATA_DIR }}
-          ls -lart ${{ env.TF_DATA_DIR }}
           cd ${{ env.TF_DATA_DIR }}
           terraform init -input=false
       - name: Terraform validation
-        run: terraform validate
-#      - name: Terraform plan
-#        run: terraform plan  -no-color -target=aws_instance.caldera_server -detailed-exitcode
+        run: |
+          cd ${{ env.TF_DATA_DIR }}
+          terraform validate
+      - name: Terraform plan
+        run: |
+          cd ${{ env.TF_DATA_DIR }}
+          terraform plan  -no-color -target=aws_instance.caldera_server -detailed-exitcode
       - name: Listar los ficheros
         if: ${{ always() }}
         run: ls -lart $TF_WORKSPACE
