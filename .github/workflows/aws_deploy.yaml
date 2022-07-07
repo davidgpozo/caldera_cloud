@@ -25,7 +25,7 @@ on:
         required: false
 
 jobs:
-  print-tag:
+  Deploy-caldera-server:
     runs-on: ubuntu-latest
 #    if:  ${{ inputs.print_tags }}
     steps:
@@ -39,3 +39,15 @@ jobs:
           terraform_version: 1.2.4
       - name: Verify Terraform version
         run: terraform --version
+      - name: change directory
+        run: cd AWS_infra
+      - name: Terraform init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: terraform init -input=false
+      - name: Terraform validation
+        run: terraform validate
+      - name: Terraform plan
+        run: terraform plan -var-file=terraform.tfvars -no-color -out=plan.out -target=aws_instance.caldera_server -detailed-exitcode
+
