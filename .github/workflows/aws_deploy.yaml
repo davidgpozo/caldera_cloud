@@ -32,9 +32,12 @@ jobs:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
-      - name: enviroment vars
-        run: env
+        uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+      - name: Install AWS cli
+        uses: aws-actions/setup-sam@v2
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
         with:
