@@ -29,7 +29,7 @@ module "vpc" {
 ### Gen RSA Key for EKS
 #############################################################################
 module "aws_rsa_key" {
-  source       = "../aws_rsa_key"
+  source       = "./terraform_modules/aws_rsa_key"
   region       = var.aws_region_name
   rsa_key_name = var.rsa_key_name
   depends_on   = [module.vpc]
