@@ -31,8 +31,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: tesy
+        run: pwd
       - name: Listar los ficheros
-        run: ls -lart ${{ env.GITHUB_ENV }}
+        run: ls -lart ${{ env.GITHUB_ENV }}/AWS_infra
       - name: enviroment vars
         run: env
       - name: Install Terraform
