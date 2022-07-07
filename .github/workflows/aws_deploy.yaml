@@ -50,7 +50,7 @@ jobs:
         run: terraform --version
       - name: Terraform init
         env:
-          TF_WORKSPACE: ${{ env.GITHUB_WORKSPACE }}/AWS_infra
+          TF_WORKSPACE: ${{ github.WORKSPACE }}/AWS_infra
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
