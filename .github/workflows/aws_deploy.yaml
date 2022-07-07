@@ -34,7 +34,7 @@ jobs:
       - name: tesy
         run: pwd
       - name: Listar los ficheros
-        run: ls -lart $PWD/AWS_infra
+        run: ls -lart ${{ env.GITHUB_WORKSPACE }}/AWS_infra
       - name: enviroment vars
         run: env
       - name: Install Terraform
