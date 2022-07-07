@@ -53,7 +53,7 @@ jobs:
         run: |
           echo hola ${{ env.TF_DATA_DIR }}
           ls -lart ${{ env.TF_DATA_DIR }}
-          terraform init -input=false
+          terraform init -chdir=${{ env.TF_DATA_DIR }} -input=false
       - name: Terraform validation
         run: terraform validate
 #      - name: Terraform plan
