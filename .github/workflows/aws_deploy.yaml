@@ -29,5 +29,7 @@ jobs:
     runs-on: ubuntu-latest
 #    if:  ${{ inputs.print_tags }}
     steps:
+      - name: Check out code
+        uses: actions/checkout@v2
       - name: Print the input tag to STDOUT
         run: ls -lart
