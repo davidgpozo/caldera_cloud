@@ -30,25 +30,20 @@ jobs:
 #    if:  ${{ inputs.print_tags }}
     env:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
         with:
           python-version: "3.8"
-      - name: Install AWS cli
-        uses: aws-actions/setup-sam@v2
-      - name: Install Terraform
-        uses: hashicorp/setup-terraform@v2
+      - uses: aws-actions/setup-sam@v2
+      - uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.2.4
       - name: Verify Terraform version
         run: terraform --version
       - name: Terraform init
-        env:
-          TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           cd ${{ env.TF_DATA_DIR }}
           terraform init -input=false
