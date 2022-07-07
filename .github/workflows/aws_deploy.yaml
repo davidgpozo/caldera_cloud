@@ -48,7 +48,7 @@ jobs:
           TF_DATA_DIR: $GITHUB_WORKSPACE/AWS_infra
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform init -input=false
+        run: cd $GITHUB_WORKSPACE/AWS_infra && terraform init -input=false
       - name: Terraform validation
         run: terraform validate
 #      - name: Terraform plan
