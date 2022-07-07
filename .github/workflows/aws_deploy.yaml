@@ -39,7 +39,7 @@ jobs:
       - name: tesy
         run: pwd
       - name: Listar los ficheros
-        run: ls -lart $TF_WORKSPACE
+        run: ls -d $PWD/*
       - name: enviroment vars
         run: env
       - name: Install Terraform
