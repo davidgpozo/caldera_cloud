@@ -33,7 +33,7 @@ jobs:
         run: |
           export TF_WORKSPACE=$GITHUB_WORKSPACE/AWS_infra
           echo $TF_WORKSPACE
-          ls -laRt $GITHUB_WORKSPACE
+          ls -laRt $PWD
       - name: Check out code
         uses: actions/checkout@v2
       - name: tesy
