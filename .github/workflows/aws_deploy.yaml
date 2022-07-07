@@ -29,13 +29,8 @@ jobs:
     runs-on: ubuntu-latest
 #    if:  ${{ inputs.print_tags }}
     env:
-      TF_WORKSPACE: ${{ github.WORKSPACE }}/AWS_infra
+      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
     steps:
-      - name: Set vars
-        run: |
-          export TF_WORKSPACE=$GITHUB_WORKSPACE/AWS_infra
-          echo $TF_WORKSPACE
-          ls -laRt $PWD
       - name: Check out code
         uses: actions/checkout@v2
       - name: tesy
@@ -57,7 +52,7 @@ jobs:
         run: |
           echo hola ${{ env.TF_WORKSPACE }}
           ls -lart ${{ env.TF_WORKSPACE }}
-          cd $GITHUB_WORKSPACE/AWS_infra && terraform init -input=false
+          terraform init -input=false
       - name: Terraform validation
         run: terraform validate
 #      - name: Terraform plan
