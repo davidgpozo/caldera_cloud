@@ -42,7 +42,7 @@ jobs:
       - name: Install AWS cli
         uses: aws-actions/setup-sam@v2
         with:
-          version: 2.7.5
+          version: 1.53.0
       - name: Install terraform
         uses: hashicorp/setup-terraform@v2
         with:
