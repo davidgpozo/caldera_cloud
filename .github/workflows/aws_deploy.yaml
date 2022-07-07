@@ -33,7 +33,7 @@ jobs:
         run: |
           export TF_WORKSPACE=$GITHUB_WORKSPACE/AWS_infra
           echo $TF_WORKSPACE
-          ls -lart $TF_WORKSPACE
+          ls -laRt /home/runner/work/caldera_cloud/caldera_cloud
       - name: Check out code
         uses: actions/checkout@v2
       - name: tesy
