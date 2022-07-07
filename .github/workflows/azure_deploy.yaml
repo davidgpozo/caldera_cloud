@@ -1,4 +1,4 @@
-name: Pedro
+name: Azure deploy
 on:
   workflow_dispatch:
     inputs:
@@ -11,8 +11,8 @@ on:
         - info
         - warning
         - debug
-      print_tags:
-        description: 'True to print to STDOUT'
+      tags:
+        description: 'Set of TAGS space separated'
         required: true
         type: boolean
       tags:
