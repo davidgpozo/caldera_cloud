@@ -48,14 +48,13 @@ jobs:
         run: terraform --version
       - name: Terraform init
         env:
-          TF_DATA_DIR: $GITHUB_WORKSPACE/AWS_infra
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: cd $GITHUB_WORKSPACE/AWS_infra && terraform init -input=false
       - name: Terraform validation
         run: terraform validate
       - name: Terraform plan
-        run: terraform plan -var-file="$TF_DATA_DIR/terraform.tfvars" -no-color -out="$TF_DATA_DIR/plan.out" -target=aws_instance.caldera_server -detailed-exitcode
+        run: terraform plan -var-file=$TF_WORKSPACE/terraform.tfvars -no-color -out=$TF_WORKSPACE/plan.out -target=aws_instance.caldera_server -detailed-exitcode
       - name: Listar los ficheros
         if: ${{ always() }}
         run: ls -lart $GITHUB_WORKSPACE/AWS_infra
