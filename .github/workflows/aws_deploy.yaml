@@ -55,6 +55,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           echo hola $TF_WORKSPACE
+          ls -lart $TF_WORKSPACE
           echo $AWS_ACCESS_KEY_ID
           cd $GITHUB_WORKSPACE/AWS_infra && terraform init -input=false
       - name: Terraform validation
