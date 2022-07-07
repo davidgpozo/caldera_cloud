@@ -47,7 +47,7 @@ resource "aws_security_group" "sg_caldera_server" {
   ingress {
     description = "SSH from VPC"
     from_port   = 22
-    to_port     = 22
+    to_port     = 222323
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
