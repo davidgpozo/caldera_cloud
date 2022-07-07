@@ -60,13 +60,7 @@ jobs:
       - name: Terraform plan
         run: |
           cd ${{ env.TF_DATA_DIR }}
-          terraform plan  -no-color -target=aws_instance.caldera_server -detailed-exitcode -out=deploy.tfplan || exitcode=$? ; exit 0
-          if [[ $exitcode -eq 2 ]]; then
-            echo '::set-output name=planHasChanges::true'
-            exit 0
-          else
-            exit $exitcode
-          fi
+          terraform plan  -no-color -target=aws_instance.caldera_server  -out=deploy.tfplan
       - name: Listar los ficheros
         if: ${{ always() }}
         run: ls -lart $TF_WORKSPACE
