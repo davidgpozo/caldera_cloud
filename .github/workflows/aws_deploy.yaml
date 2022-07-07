@@ -55,7 +55,8 @@ jobs:
       - name: Terraform validation
         run: terraform validate
       - name: Terraform plan
-        run: terraform plan -var-file=$TF_DATA_DIR/terraform.tfvars -no-color -out=$TF_DATA_DIR/plan.out -target=aws_instance.caldera_server -detailed-exitcode
+        run: terraform plan -var-file="$TF_DATA_DIR/terraform.tfvars" -no-color -out="$TF_DATA_DIR/plan.out" -target=aws_instance.caldera_server -detailed-exitcode
       - name: Listar los ficheros
+        if: ${{ always() }}
         run: ls -lart $GITHUB_WORKSPACE/AWS_infra
 
