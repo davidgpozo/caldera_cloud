@@ -32,7 +32,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: Listar los ficheros
-        run: ls -lart ${{ env.GITHUB_PATH }}/AWS_infra
+        run: ls -lart ${{ env.GITHUB_ENV }}
       - name: enviroment vars
         run: env
       - name: Install Terraform
@@ -49,6 +49,6 @@ jobs:
         run: terraform init -input=false
       - name: Terraform validation
         run: terraform validate
-      - name: Terraform plan
-        run: terraform plan -var-file=terraform.tfvars -no-color -out=plan.out -target=aws_instance.caldera_server -detailed-exitcode
+#      - name: Terraform plan
+#        run: terraform plan -var-file=terraform.tfvars -no-color -out=plan.out -target=aws_instance.caldera_server -detailed-exitcode
 
