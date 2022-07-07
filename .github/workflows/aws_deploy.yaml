@@ -29,6 +29,9 @@ jobs:
     runs-on: ubuntu-latest
 #    if:  ${{ inputs.print_tags }}
     steps:
+      - name: Set vars
+        run: |
+          export TF_WORKSPACE=$GITHUB_WORKSPACE/AWS_infra
       - name: Check out code
         uses: actions/checkout@v2
       - name: tesy
