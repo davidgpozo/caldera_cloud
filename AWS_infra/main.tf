@@ -39,7 +39,7 @@ module "aws_rsa_key" {
 #############################################################################
 ### Caldera server
 #############################################################################
-resource "aws_security_group" "sg_caldera_server" {
+resource "aws_security_groups" "sg_caldera_server" {
   name        = "sg_caldera_linux"
   description = "Allow ports for caldera server"
   vpc_id      = module.vpc.vpc_id
@@ -47,7 +47,7 @@ resource "aws_security_group" "sg_caldera_server" {
   ingress {
     description = "SSH from VPC"
     from_port   = 22
-    to_port     = 222323
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
