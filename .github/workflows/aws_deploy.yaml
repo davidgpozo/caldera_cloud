@@ -69,5 +69,6 @@ jobs:
         run: |
           git config --global user.name 'shefirot'
           git config --global user.email 'davidgpozo@gmail.com'
+          git add ${{ env.TF_DATA_DIR }}/deploy.tfplan
           git commit -am "Automated report"
           git push
