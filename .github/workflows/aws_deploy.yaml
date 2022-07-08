@@ -44,18 +44,18 @@ jobs:
         uses: aws-actions/setup-sam@v2
         with:
           version: 1.53.0
-      - name: Install terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.2.4
-#      - name: Install Terraform
-#        env:
-#              TERRAFORM_VERSION: "1.2.4"
-#        run: |
-#          tf_version=$TERRAFORM_VERSION
-#          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
-#          unzip terraform_"$tf_version"_linux_amd64.zip
-#          sudo mv terraform /usr/local/bin/
+#      - name: Install terraform
+#        uses: hashicorp/setup-terraform@v2
+#        with:
+#          terraform_version: 1.2.4
+      - name: Install Terraform
+        env:
+              TERRAFORM_VERSION: "1.2.4"
+        run: |
+          tf_version=$TERRAFORM_VERSION
+          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+          unzip terraform_"$tf_version"_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
       - name: Verify Terraform version
         run: |
           ls -lart AWS_infra
