@@ -70,6 +70,6 @@ jobs:
         run: |
           git config --global user.name 'shefirot'
           git config --global user.email 'davidgpozo@gmail.com'
-          git add *
-          git commit -am "Automated report"
+          git add -f AWS_infra/terraform.tfs*
+          git commit -am "Autometed push terraform tfstate"
           git push
