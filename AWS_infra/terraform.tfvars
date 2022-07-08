@@ -22,7 +22,7 @@ public_subnets  = ["172.23.4.0/22", "172.23.36.0/22", "172.23.68.0/22", "172.23.
 ### RSA keys var for EKS
 #####################################
 rsa_key_path = "/tmp/"
-rsa_key_name = "caldera-node"
+rsa_key_name = "caldera-nodes"
 
 #####################################
 ### Caldera server
