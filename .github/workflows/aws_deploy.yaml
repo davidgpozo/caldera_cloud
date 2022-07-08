@@ -118,6 +118,11 @@ jobs:
     steps:
       - name: Check out the code
         uses: actions/checkout@v3
+      - name: Pull tfstate updated
+        run: |
+          git config --global user.name 'shefirot'
+          git config --global user.email 'davidgpozo@gmail.com'
+          git pull
       - name: Install python 3
         uses: actions/setup-python@v3
         with:
@@ -165,8 +170,6 @@ jobs:
           terraform apply deploy.tfplan
       - name: Commit report
         run: |
-          git config --global user.name 'shefirot'
-          git config --global user.email 'davidgpozo@gmail.com'
           git add -f AWS_infra/terraform.tfs* || true
           git commit -m "Autometed push terraform tfstate" || true
           git push
