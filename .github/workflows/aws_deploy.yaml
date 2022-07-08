@@ -25,7 +25,7 @@ on:
         - pro
 
 jobs:
-  Deploy-caldera-server:
+  deploy-caldera-server:
     runs-on: self-hosted
 #    runs-on: ubuntu-20.04
 #    if:  ${{ inputs.print_tags }}
@@ -100,12 +100,12 @@ jobs:
           IP=$(terraform output -raw caldera_server_ip)
           echo "::set-output name=ip::$IP"
 
-  Wait-caldera-up-and-ready:
-    needs: Deploy-caldera-server
+  wait-caldera-up-and-ready:
     runs-on: self-hosted
+    needs: deploy-caldera-server
 #    runs-on: ubuntu-20.04
 #    if:  ${{ inputs.print_tags }}
       steps:
       - name: Wait for service
         run: |
-          echo ${{needs.Deploy-caldera-server.outputs.ip}}
+          echo ${{needs.deploy-caldera-server.outputs.ip}}
