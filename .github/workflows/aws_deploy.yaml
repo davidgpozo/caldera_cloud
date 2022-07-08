@@ -15,14 +15,14 @@ on:
         description: 'True to print to STDOUT'
         required: true
         type: boolean
-      tags:
-        description: 'Test scenario tags'
-        required: false
-        type: string
       environment:
-        description: 'Environment to run tests against'
-        type: enviroment
-        required: false
+        description: 'Environment to run against'
+        type: choice
+        required: true
+        default: "dev"
+        options:
+        - dev
+        - pro
 
 jobs:
   Deploy-caldera-server:
@@ -61,6 +61,10 @@ jobs:
       - name: Verify Terraform version
         run: |
           terraform --version
+      - name: Terraform workspace
+        run: |
+          terraform workspace new ${{ inputs.environment }}
+          terraform workspace select ${{ inputs.environment }}
       - name: Terraform init
         run: |
           cd ${{ env.TF_DATA_DIR }}
@@ -72,7 +76,7 @@ jobs:
       - name: Terraform plan
         run: |
           cd ${{ env.TF_DATA_DIR }}
-          terraform plan  -no-color -target=aws_instance.caldera_server  -out=deploy.tfplan
+          terraform plan -target=aws_instance.caldera_server  -out=deploy.tfplan
       - name: Terraform apply
         run: |
           cd ${{ env.TF_DATA_DIR }}
