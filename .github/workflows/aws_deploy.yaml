@@ -46,7 +46,7 @@ jobs:
       - name: Install terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.1.9
+          terraform_version: 1.2.4
 #      - name: Install Terraform
 #        env:
 #              TERRAFORM_VERSION: "1.2.4"
@@ -60,7 +60,7 @@ jobs:
       - name: Terraform init
         run: |
           cd ${{ env.TF_DATA_DIR }}
-          terraform init -input=false
+          terraform init
       - name: Terraform validation
         run: |
           cd ${{ env.TF_DATA_DIR }}
