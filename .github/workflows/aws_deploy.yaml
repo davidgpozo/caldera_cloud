@@ -57,7 +57,9 @@ jobs:
 #          unzip terraform_"$tf_version"_linux_amd64.zip
 #          sudo mv terraform /usr/local/bin/
       - name: Verify Terraform version
-        run: terraform --version
+        run: |
+          terraform --version
+          terragrunt --version
       - name: Terraform init
         run: |
           cd ${{ env.TF_DATA_DIR }}
