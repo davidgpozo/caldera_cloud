@@ -95,8 +95,9 @@ jobs:
         env:
           TF_OUT: ${{ env.TF_DATA_DIR }}/terraform.tfstate.d/${{ inputs.environment }}
         run: |
-          cd ${{ env.TF_OUT }}
+          cd ${{ env.TF_DATA_DIR }}
           IP=$(terraform output -raw caldera_server_ip)
+          echo $IP
           echo "::set-output name=ip::$IP"
   wait-caldera-up:
     runs-on: self-hosted
@@ -104,4 +105,4 @@ jobs:
     steps:
     - name: Wait for service
       run: |
-        echo ${{needs.deploy-caldera-server.outputs.server-ip}}
+        echo ${{ needs.deploy-caldera-server.outputs.server-ip }}
