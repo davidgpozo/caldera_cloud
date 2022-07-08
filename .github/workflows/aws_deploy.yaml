@@ -105,4 +105,6 @@ jobs:
     steps:
     - name: Wait for service
       run: |
-        echo ${{ needs.deploy-caldera-server.outputs.server-ip }}
+        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        echo $SERVER_IP
+        while ! curl -H "KEY:redAPIKeySantander22" http://$SERVER_IP:2288/api/v2/agents &>/dev/null; do echo "Curl Fail - `date`" && sleep 1; done
