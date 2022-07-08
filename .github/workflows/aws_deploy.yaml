@@ -87,7 +87,8 @@ jobs:
         run: |
           git config --global user.name 'shefirot'
           git config --global user.email 'davidgpozo@gmail.com'
-          git commit -am "Autometed push terraform tfstate" || true
+          git add -f AWS_infra/terraform.tfs* || true
+          git commit -m "Autometed push terraform tfstate" || true
           git push
       - name: Export caldera IP
         id: caldera-ip
@@ -166,5 +167,6 @@ jobs:
         run: |
           git config --global user.name 'shefirot'
           git config --global user.email 'davidgpozo@gmail.com'
-          git commit -am "Autometed push terraform tfstate" || true
+          git add -f AWS_infra/terraform.tfs* || true
+          git commit -m "Autometed push terraform tfstate" || true
           git push
