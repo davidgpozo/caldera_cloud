@@ -26,7 +26,7 @@ on:
 
 jobs:
   Deploy-caldera-server:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 #    if:  ${{ inputs.print_tags }}
     env:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
@@ -35,10 +35,10 @@ jobs:
     steps:
       - name: Check out the code
         uses: actions/checkout@v3
-      - name: Install python 3
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.8"
+#      - name: Install python 3
+#        uses: actions/setup-python@v3
+#        with:
+#          python-version: "3.8"
       - name: Install AWS cli
         uses: aws-actions/setup-sam@v2
         with:
