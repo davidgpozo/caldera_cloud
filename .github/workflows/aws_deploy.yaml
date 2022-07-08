@@ -65,4 +65,9 @@ jobs:
 #        run: |
 #          cd ${{ env.TF_DATA_DIR }}
 #          terraform apply deploy.tfplan
-
+      - name: Commit report
+        run: |
+          git config --global user.name 'shefirot'
+          git config --global user.email 'davidgpozo@gmail.com'
+          git commit -am "Automated report"
+          git push
