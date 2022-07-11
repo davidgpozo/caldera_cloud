@@ -69,8 +69,7 @@ jobs:
           terraform --version
       - name: Terraform workspace
         run: |
-          terraform workspace new ${{ inputs.environment }}
-          terraform workspace select ${{ inputs.environment }}
+          terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
       - name: Terraform init
         run: |
           cd ${{ env.TF_DATA_DIR }}
@@ -156,8 +155,7 @@ jobs:
           terraform --version
       - name: Terraform workspace
         run: |
-          terraform workspace new ${{ inputs.environment }}
-          terraform workspace select ${{ inputs.environment }}
+          terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
       - name: Terraform init
         run: |
           cd ${{ env.TF_DATA_DIR }}
