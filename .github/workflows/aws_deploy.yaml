@@ -90,6 +90,7 @@ jobs:
         run: |
           git config --global user.name 'shefirot'
           git config --global user.email 'davidgpozo@gmail.com'
+          git pull
           git add -f AWS_infra/terraform.tfs* || true
           git commit -m "Autometed push terraform tfstate" || true
           git push
@@ -174,6 +175,7 @@ jobs:
           terraform apply deploy.tfplan
       - name: Commit report
         run: |
+          git pull
           git add -f AWS_infra/terraform.tfs* || true
           git commit -m "Autometed push terraform tfstate" || true
           git push
