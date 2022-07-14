@@ -26,8 +26,8 @@ on:
 
 jobs:
   deploy-caldera-server:
-    runs-on: self-hosted
-#    runs-on: ubuntu-20.04
+#    runs-on: self-hosted
+    runs-on: ubuntu-20.04
 #    if:  ${{ inputs.print_tags }}
     env:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra

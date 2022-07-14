@@ -26,8 +26,8 @@ on:
 
 jobs:
   deploy-caldera-server:
-    runs-on: self-hosted
-#    runs-on: ubuntu-20.04
+#    runs-on: self-hosted
+    runs-on: ubuntu-20.04
 #    if:  ${{ inputs.print_tags }}
     env:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
@@ -103,7 +103,7 @@ jobs:
           echo $IP
           echo "::set-output name=ip::$IP"
   wait-caldera-up:
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
     needs: deploy-caldera-server
     steps:
     - name: Wait for service
@@ -112,7 +112,7 @@ jobs:
         echo $SERVER_IP
         while ! curl -H "KEY:redAPIKeySantander22" http://$SERVER_IP:2288/api/v2/agents &>/dev/null; do echo "Curl Fail - `date`" && sleep 1; done
   deploy-caldera-hosts:
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
     needs: wait-caldera-up
     env:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
