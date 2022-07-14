@@ -121,7 +121,6 @@ jobs:
     steps:
       - name: Check out the code
         run: |
-          git config --global user.name ${{ github.actor }}
           git pull
       - name: Install python 3
         uses: actions/setup-python@v3
