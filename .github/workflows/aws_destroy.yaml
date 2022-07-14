@@ -81,7 +81,8 @@ jobs:
       - name: Terraform plan destroy
         run: |
           cd ${{ env.TF_DATA_DIR }}
-          terraform plan -target=aws_instance.caldera_server  -out=deploy.tfplan -destroy
+#          terraform plan -target=aws_instance.caldera_server  -out=deploy.tfplan -destroy
+          terraform plan -out=deploy.tfplan -destroy
       - name: Terraform destroy
         run: |
           cd ${{ env.TF_DATA_DIR }}
