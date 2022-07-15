@@ -95,7 +95,7 @@ resource "aws_instance" "caldera_server" {
   subnet_id                   = element(module.vpc.public_subnets, 0)
   vpc_security_group_ids      = [aws_security_group.sg_caldera_server.id]
   key_name                    = var.rsa_key_name
-  user_data                   = file("files/install_caldera_server.sh")
+#  user_data                   = file("files/install_caldera_server.sh")
   depends_on                  = [module.aws_rsa_key]
   private_ip                  = "172.23.6.95"
   tags = {

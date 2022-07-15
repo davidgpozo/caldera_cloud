@@ -25,6 +25,7 @@ on:
         - pro
 
 jobs:
+
   deploy-caldera-server:
 #    runs-on: self-hosted
     runs-on: ubuntu-20.04
@@ -34,7 +35,8 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     outputs:
-      server-ip: ${{ steps.caldera-ip.outputs.ip }}
+      server-ip: ${{ steps.caldera-ouputs.outputs.ip }}
+      server-sha: ${{ steps.caldera-ouputs.outputs.sha }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v3
@@ -93,27 +95,67 @@ jobs:
           git add -f AWS_infra/terraform.tfs* || true
           git commit -m "Autometed push terraform tfstate" || true
           git push
-      - name: Export caldera IP
-        id: caldera-ip
-        env:
-          TF_OUT: ${{ env.TF_DATA_DIR }}/terraform.tfstate.d/${{ inputs.environment }}
+      - name: Export vars IP
+        id: caldera-outputs
         run: |
           cd ${{ env.TF_DATA_DIR }}
           IP=$(terraform output -raw caldera_server_ip)
+          SHA=$(terraform output --raw rsa_private_key)
           echo $IP
           echo "::set-output name=ip::$IP"
-  wait-caldera-up:
+          echo "::set-output name=sha::$SHA"
+
+  wait-caldera-ssh:
     runs-on: ubuntu-20.04
     needs: deploy-caldera-server
+    steps:
+    - name: Install netcat
+      run: |
+        sudo apt update
+        sudo apt install netcat -y
+    - name: Wait for service
+      run: |
+        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        echo $SERVER_IP
+        while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
+
+  ansible-install-caldera:
+    runs-on: ubuntu-20.04
+    needs: wait-caldera-ssh
+    env:
+      ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
+      ANSIBLE_HOST: /tmp/hosts
+      CALDERA_KEY: /tmp/sha
+    steps:
+    - name: Install Ansible
+      run: |
+        sudo apt update
+        sudo apt install ansible -y
+      run: |
+        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        echo $SERVER_IP
+        echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
+        export SERVER_SHA=${{ needs.deploy-caldera-server.outputs.server-sha }}
+        echo "-----BEGIN RSA PRIVATE KEY-----" > ${{ env.CALDERA_KEY }}
+        echo $SERVER_SHA | sed 's/-----BEGIN RSA PRIVATE KEY----- //g' | sed 's/ -----END RSA PRIVATE KEY-----//g' | sed 's/ /\n/g' >> ${{ env.CALDERA_KEY }}
+        echo "-----END RSA PRIVATE KEY-----"  >> ${{ env.CALDERA_KEY }}
+        cd ${{ env.ANSIBLE_DATA_DIR }}
+        export ANSIBLE_HOST_KEY_CHECKING=false
+        ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-caldera-server.yml
+
+  wait-caldera-server:
+    runs-on: ubuntu-20.04
+    needs: ansible-install-caldera
     steps:
     - name: Wait for service
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo $SERVER_IP
         while ! curl -H "KEY:redAPIKeySantander22" http://$SERVER_IP:2288/api/v2/agents &>/dev/null; do echo "Curl Fail - `date`" && sleep 1; done
+
   deploy-caldera-hosts:
     runs-on: ubuntu-20.04
-    needs: wait-caldera-up
+    needs: wait-caldera-server
     env:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
