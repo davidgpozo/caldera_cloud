@@ -120,8 +120,7 @@ jobs:
         sudo apt install netcat -y
     - name: Wait for ssh
       run: |
-#        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
-#        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo server $SERVER_IP
         while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 
