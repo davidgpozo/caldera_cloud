@@ -35,8 +35,8 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     outputs:
-      server-ip: ${{ steps.caldera-ouputs.outputs.ip }}
-      server-sha: ${{ steps.caldera-ouputs.outputs.sha }}
+      server-ip: ${{ steps.caldera-outputs.outputs.ip }}
+      server-sha: ${{ steps.caldera-outputs.outputs.sha }}
     steps:
       - name: Check out the code
         uses: actions/checkout@v3
@@ -113,10 +113,10 @@ jobs:
       run: |
         sudo apt update
         sudo apt install netcat -y
-    - name: Wait for service
+    - name: Wait for ssh
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
-        echo $SERVER_IP
+        echo server $SERVER_IP
         while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 
   ansible-install-caldera:
@@ -134,7 +134,7 @@ jobs:
     - name: Deploy Mitre Caldera
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
-        echo $SERVER_IP
+        echo server $SERVER_IP
         echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
         export SERVER_SHA=${{ needs.deploy-caldera-server.outputs.server-sha }}
         echo "-----BEGIN RSA PRIVATE KEY-----" > ${{ env.CALDERA_KEY }}
