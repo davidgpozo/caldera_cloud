@@ -131,6 +131,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install ansible -y
+    - name: Deploy Mitre Caldera
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo $SERVER_IP
