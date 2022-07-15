@@ -23,10 +23,10 @@ on:
         options:
         - dev
         - pro
-outputs:
-  server-ip:
-    description: "Caldera Server IP"
-    value: ${{ steps.caldera-outputs.outputs.ip }}
+#outputs:
+#  server-ip:
+#    description: "Caldera Server IP"
+#    value: ${{ steps.caldera-outputs.outputs.ip }}
 
 jobs:
 
@@ -119,7 +119,7 @@ jobs:
         sudo apt install netcat -y
     - name: Wait for ssh
       run: |
-        export SERVER_IP=${{ outputs.server-ip }}
+        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo server $SERVER_IP
         while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 
