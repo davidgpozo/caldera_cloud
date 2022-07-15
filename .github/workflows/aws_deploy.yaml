@@ -127,6 +127,8 @@ jobs:
       ANSIBLE_HOST: /tmp/hosts
       CALDERA_KEY: /tmp/sha
     steps:
+    - name: Check out the code
+      uses: actions/checkout@v3
     - name: Install Ansible
       run: |
         sudo apt update
