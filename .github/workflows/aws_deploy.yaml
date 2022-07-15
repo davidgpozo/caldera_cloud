@@ -148,7 +148,7 @@ jobs:
 
   wait-caldera-server:
     runs-on: ubuntu-20.04
-    needs: ansible-install-caldera
+    needs: deploy-caldera-server
     steps:
     - name: Wait for service
       run: |
