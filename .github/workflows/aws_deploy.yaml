@@ -148,7 +148,7 @@ jobs:
 
   wait-caldera-server:
     runs-on: ubuntu-20.04
-    needs: deploy-caldera-server
+    needs: wait-caldera-ssh
     steps:
     - name: Wait for service
       run: |
