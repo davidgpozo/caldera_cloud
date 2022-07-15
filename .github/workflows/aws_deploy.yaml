@@ -1,5 +1,4 @@
 name: AWS deploy
-description: "Deploy Mitre Caldera enviriment on AWS"
 on:
   workflow_dispatch:
     inputs:
