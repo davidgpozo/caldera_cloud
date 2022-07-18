@@ -165,51 +165,53 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
-      - name: Check out the code
-        run: |
-          git pull
-      - name: Install python 3
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.8"
-      - name: Install AWS cli
-        run: |
-          python -m pip install --upgrade pip
-          pip install awscli==1.25.26
-      - name: Install Terraform
-        env:
-              TERRAFORM_VERSION: "1.2.4"
-        run: |
-          sudo apt update
-          sudo apt install zip -y
-          tf_version=$TERRAFORM_VERSION
-          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
-          unzip terraform_"$tf_version"_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-      - name: Verify Terraform version
-        run: |
-          terraform --version
-      - name: Terraform workspace
-        run: |
-          terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
-      - name: Terraform init
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform init -input=false
-      - name: Terraform validation
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform validate
-      - name: Terraform plan
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform plan -out=deploy.tfplan
-      - name: Terraform apply
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform apply deploy.tfplan
-      - name: Commit report
-        run: |
-          git add -f AWS_infra/terraform.tfs* || true
-          git commit -m "Autometed push terraform tfstate" || true
-          git push
+    - name: Check out the code
+      uses: actions/checkout@v3
+    - name: Ensure pull the code
+      run: |
+        git pull
+    - name: Install python 3
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8"
+    - name: Install AWS cli
+      run: |
+        python -m pip install --upgrade pip
+        pip install awscli==1.25.26
+    - name: Install Terraform
+      env:
+            TERRAFORM_VERSION: "1.2.4"
+      run: |
+        sudo apt update
+        sudo apt install zip -y
+        tf_version=$TERRAFORM_VERSION
+        wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+        unzip terraform_"$tf_version"_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+    - name: Verify Terraform version
+      run: |
+        terraform --version
+    - name: Terraform workspace
+      run: |
+        terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
+    - name: Terraform init
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform init -input=false
+    - name: Terraform validation
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform validate
+    - name: Terraform plan
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform plan -out=deploy.tfplan
+    - name: Terraform apply
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform apply deploy.tfplan
+    - name: Commit report
+      run: |
+        git add -f AWS_infra/terraform.tfs* || true
+        git commit -m "Autometed push terraform tfstate" || true
+        git push
