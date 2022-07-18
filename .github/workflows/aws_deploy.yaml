@@ -118,125 +118,125 @@ jobs:
         echo la SHA en fichero
         cat /tmp/b
 
-  wait-caldera-ssh:
-    runs-on: ubuntu-20.04
-    needs: deploy-caldera-server
-    steps:
-    - name: Install netcat
-      run: |
-        sudo apt update
-        sudo apt install netcat -y
-    - name: Wait for ssh
-      run: |
-        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
-        echo server $SERVER_IP
-        while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
-
-  ansible-install-caldera:
-    runs-on: ubuntu-20.04
-    needs: [deploy-caldera-server, wait-caldera-ssh]
-    env:
-      ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
-      ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
-      CALDERA_KEY: ${{ github.WORKSPACE }}/sha
-    steps:
-    - name: Check out the code
-      uses: actions/checkout@v3
-    - name: Install Ansible
-      run: |
-        sudo apt update
-        sudo apt install ansible -y
-    - name: Generate enviroment files
-      run: |
-        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
-        echo server $SERVER_IP
-        echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
-        export SERVER_SHA="${{ needs.deploy-caldera-server.outputs.server-sha }}"
-        echo  exportado $SERVER_SHA
-        echo original ${{ needs.deploy-caldera-server.outputs.server-sha }}
-        echo "-----BEGIN RSA PRIVATE KEY-----" > ${{ env.CALDERA_KEY }}
-        echo $SERVER_SHA | sed 's/-----BEGIN RSA PRIVATE KEY----- //g' | sed 's/ -----END RSA PRIVATE KEY-----//g' | sed 's/ /\n/g' >> ${{ env.CALDERA_KEY }}
-        echo "-----END RSA PRIVATE KEY-----"  >> ${{ env.CALDERA_KEY }}
-        chmod 400 ${{ env.CALDERA_KEY }}
-    - name: Deploy Mitre Caldera
-      run: |
-        cd ${{ env.ANSIBLE_DATA_DIR }}
-        ls -lah ${{ env.CALDERA_KEY }}
-        cat ${{ env.CALDERA_KEY }}
-        export ANSIBLE_HOST_KEY_CHECKING=false
-        ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-caldera-server.yml
-
-  wait-caldera-server:
-    runs-on: ubuntu-20.04
-    needs: [deploy-caldera-server,ansible-install-caldera]
-    steps:
-    - name: Wait for service
-      run: |
-        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
-        echo $SERVER_IP
-        while ! curl -H "KEY:redAPIKeySantander22" http://$SERVER_IP:2288/api/v2/agents &>/dev/null; do echo "Curl Fail - `date`" && sleep 1; done
-
-  deploy-caldera-hosts:
-    runs-on: ubuntu-20.04
-    needs: wait-caldera-server
-    env:
-      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    steps:
-      - name: Check out the code
-        run: |
-          git pull
-      - name: Install python 3
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.8"
-      - name: Install AWS cli
-        run: |
-          python -m pip install --upgrade pip
-          pip install awscli==1.25.26
+#  wait-caldera-ssh:
+#    runs-on: ubuntu-20.04
+#    needs: deploy-caldera-server
+#    steps:
+#    - name: Install netcat
+#      run: |
+#        sudo apt update
+#        sudo apt install netcat -y
+#    - name: Wait for ssh
+#      run: |
+#        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+#        echo server $SERVER_IP
+#        while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
+#
+#  ansible-install-caldera:
+#    runs-on: ubuntu-20.04
+#    needs: [deploy-caldera-server, wait-caldera-ssh]
+#    env:
+#      ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
+#      ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
+#      CALDERA_KEY: ${{ github.WORKSPACE }}/sha
+#    steps:
+#    - name: Check out the code
+#      uses: actions/checkout@v3
+#    - name: Install Ansible
+#      run: |
+#        sudo apt update
+#        sudo apt install ansible -y
+#    - name: Generate enviroment files
+#      run: |
+#        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+#        echo server $SERVER_IP
+#        echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
+#        export SERVER_SHA="${{ needs.deploy-caldera-server.outputs.server-sha }}"
+#        echo  exportado $SERVER_SHA
+#        echo original ${{ needs.deploy-caldera-server.outputs.server-sha }}
+#        echo "-----BEGIN RSA PRIVATE KEY-----" > ${{ env.CALDERA_KEY }}
+#        echo $SERVER_SHA | sed 's/-----BEGIN RSA PRIVATE KEY----- //g' | sed 's/ -----END RSA PRIVATE KEY-----//g' | sed 's/ /\n/g' >> ${{ env.CALDERA_KEY }}
+#        echo "-----END RSA PRIVATE KEY-----"  >> ${{ env.CALDERA_KEY }}
+#        chmod 400 ${{ env.CALDERA_KEY }}
+#    - name: Deploy Mitre Caldera
+#      run: |
+#        cd ${{ env.ANSIBLE_DATA_DIR }}
+#        ls -lah ${{ env.CALDERA_KEY }}
+#        cat ${{ env.CALDERA_KEY }}
+#        export ANSIBLE_HOST_KEY_CHECKING=false
+#        ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-caldera-server.yml
+#
+#  wait-caldera-server:
+#    runs-on: ubuntu-20.04
+#    needs: [deploy-caldera-server,ansible-install-caldera]
+#    steps:
+#    - name: Wait for service
+#      run: |
+#        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+#        echo $SERVER_IP
+#        while ! curl -H "KEY:redAPIKeySantander22" http://$SERVER_IP:2288/api/v2/agents &>/dev/null; do echo "Curl Fail - `date`" && sleep 1; done
+#
+#  deploy-caldera-hosts:
+#    runs-on: ubuntu-20.04
+#    needs: wait-caldera-server
+#    env:
+#      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
+#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#    steps:
+#      - name: Check out the code
+#        run: |
+#          git pull
+#      - name: Install python 3
+#        uses: actions/setup-python@v3
+#        with:
+#          python-version: "3.8"
 #      - name: Install AWS cli
-#        uses: aws-actions/setup-sam@v2
-#        with:
-#          version: 1.53.0
-#      - name: Install terraform
-#        uses: hashicorp/setup-terraform@v2
-#        with:
-#          terraform_version: 1.2.4
-      - name: Install Terraform
-        env:
-              TERRAFORM_VERSION: "1.2.4"
-        run: |
-          sudo apt update
-          sudo apt install zip -y
-          tf_version=$TERRAFORM_VERSION
-          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
-          unzip terraform_"$tf_version"_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-      - name: Verify Terraform version
-        run: |
-          terraform --version
-      - name: Terraform workspace
-        run: |
-          terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
-      - name: Terraform init
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform init -input=false
-      - name: Terraform validation
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform validate
-      - name: Terraform plan
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform plan -out=deploy.tfplan
-      - name: Terraform apply
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform apply deploy.tfplan
-      - name: Commit report
-        run: |
-          git add -f AWS_infra/terraform.tfs* || true
-          git commit -m "Autometed push terraform tfstate" || true
-          git push
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install awscli==1.25.26
+##      - name: Install AWS cli
+##        uses: aws-actions/setup-sam@v2
+##        with:
+##          version: 1.53.0
+##      - name: Install terraform
+##        uses: hashicorp/setup-terraform@v2
+##        with:
+##          terraform_version: 1.2.4
+#      - name: Install Terraform
+#        env:
+#              TERRAFORM_VERSION: "1.2.4"
+#        run: |
+#          sudo apt update
+#          sudo apt install zip -y
+#          tf_version=$TERRAFORM_VERSION
+#          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+#          unzip terraform_"$tf_version"_linux_amd64.zip
+#          sudo mv terraform /usr/local/bin/
+#      - name: Verify Terraform version
+#        run: |
+#          terraform --version
+#      - name: Terraform workspace
+#        run: |
+#          terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
+#      - name: Terraform init
+#        run: |
+#          cd ${{ env.TF_DATA_DIR }}
+#          terraform init -input=false
+#      - name: Terraform validation
+#        run: |
+#          cd ${{ env.TF_DATA_DIR }}
+#          terraform validate
+#      - name: Terraform plan
+#        run: |
+#          cd ${{ env.TF_DATA_DIR }}
+#          terraform plan -out=deploy.tfplan
+#      - name: Terraform apply
+#        run: |
+#          cd ${{ env.TF_DATA_DIR }}
+#          terraform apply deploy.tfplan
+#      - name: Commit report
+#        run: |
+#          git add -f AWS_infra/terraform.tfs* || true
+#          git commit -m "Autometed push terraform tfstate" || true
+#          git push
