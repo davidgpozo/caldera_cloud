@@ -142,7 +142,7 @@ jobs:
         echo "-----BEGIN RSA PRIVATE KEY-----" > ${{ env.CALDERA_KEY }}
         echo $SERVER_SHA | sed 's/-----BEGIN RSA PRIVATE KEY----- //g' | sed 's/ -----END RSA PRIVATE KEY-----//g' | sed 's/ /\n/g' >> ${{ env.CALDERA_KEY }}
         echo "-----END RSA PRIVATE KEY-----"  >> ${{ env.CALDERA_KEY }}
-        chmod 400 {{ env.CALDERA_KEY }}
+        chmod 400 ${{ env.CALDERA_KEY }}
     - name: Deploy Mitre Caldera
       run: |
         cd ${{ env.ANSIBLE_DATA_DIR }}
