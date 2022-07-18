@@ -102,6 +102,8 @@ jobs:
           export IP=$(terraform output -raw caldera_server_ip)
           export SHA=$(terraform output --raw rsa_private_key)
           echo $IP
+          echo $SHA
+          terraform output --raw rsa_private_key
           echo "::set-output name=ip::$IP"
           echo "::set-output name=sha::$SHA"
 
