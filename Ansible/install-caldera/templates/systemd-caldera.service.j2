@@ -1,0 +1,19 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=MITRE Caldera automated adversary emulation system
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3  {{ caldera_rootdir }}/server.py --insecure
+WorkingDirectory={{ caldera_rootdir }}
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+SyslogIdentifier=caldera
+User=root
+Group=nogroup
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

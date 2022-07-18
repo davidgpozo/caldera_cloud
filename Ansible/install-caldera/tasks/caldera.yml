@@ -1,0 +1,55 @@
+---
+- name: Ensure caldera dependencies are present
+  become: yes
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ caldera_pkg }}"
+  register: pkg_result
+  until: pkg_result is success
+
+- name: ensure caldera user exists
+  become: yes
+  user:
+    name: "{{ caldera_user }}"
+    home: "{{ caldera_home }}"
+    shell: /bin/bash
+    system: yes
+
+- name: git clone caldera
+  become: yes
+  git:
+    repo: https://github.com/mitre/caldera.git
+    dest: "{{ caldera_rootdir }}"
+    version: "{{ caldera_version }}"
+    update: false
+    recursive: true
+  register: result
+
+- name: Recursively change ownership of caldera directory
+  ansible.builtin.file:
+    path: "{{ caldera_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{ caldera_user }}"
+    group: "{{ caldera_user }}"
+
+- name: Install caldera pip requirements
+  become: yes
+  pip:
+    requirements: "{{ caldera_rootdir }}/requirements.txt"
+  register: pkg_result
+  until: pkg_result is success
+
+- name: Generate caldera config file
+  become: yes
+  ansible.builtin.template:
+    src: caldera-config-file.j2
+    dest: "{{ caldera_rootdir }}/conf/default.yml"
+    mode: '0644'
+    owner: "{{ caldera_user }}"
+    group: "{{ caldera_user }}"
+    backup: yes
+  register: calderaconf
+

@@ -1,0 +1,40 @@
+---
+- name: install systemd configuration
+  become: yes
+  ansible.builtin.template:
+    src: systemd-caldera.service.j2
+    dest: /lib/systemd/system/caldera.service
+    mode: '0644'
+    backup: yes
+  register: systemd
+  
+- name: reload systemd
+  become: yes
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: caldera
+  when: systemd.changed
+  ignore_errors: true
+
+- name: enable and start caldera systemd service
+  become: yes
+  ansible.builtin.systemd:
+    name: caldera
+    enabled: yes
+    state: 'started'
+
+- name: Restart Caldera sevice
+  become: yes
+  ansible.builtin.systemd:
+    state: 'restarted'
+    name: caldera
+
+- name: Pause for 5 minutes to build app cache
+  ansible.builtin.pause:
+    seconds: 30
+
+- name: Restart Caldera sevice again
+  become: yes
+  ansible.builtin.systemd:
+    state: 'restarted'
+    name: caldera

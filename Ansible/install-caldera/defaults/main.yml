@@ -1,0 +1,19 @@
+---
+# v2.3.2
+caldera_version: 9d2b7c85
+caldera_user: caldera
+caldera_home: /var/caldera
+caldera_rootdir: /var/caldera/caldera
+
+user_admin: redAdminSantander22
+user_blue: blueSantander22
+api_key_blue: blueAPIKeySantander22
+user_red: redSantander22
+api_key_red: redAPIKeySantander22
+caldera_port: 2288
+
+
+plugins:
+  - ssl
+  - caltack
+  - terminal
