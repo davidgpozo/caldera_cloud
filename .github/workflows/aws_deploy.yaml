@@ -99,8 +99,8 @@ jobs:
         id: caldera-outputs
         run: |
           cd ${{ env.TF_DATA_DIR }}
-          IP=$(terraform output -raw caldera_server_ip)
-          SHA=$(terraform output --raw rsa_private_key)
+          export IP=$(terraform output -raw caldera_server_ip)
+          export SHA=$(terraform output --raw rsa_private_key)
           echo $IP
           echo "::set-output name=ip::$IP"
           echo "::set-output name=sha::$SHA"
