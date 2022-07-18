@@ -106,7 +106,7 @@ jobs:
         terraform output --raw rsa_private_key
         echo "::set-output name=ip::$IP"
         echo "::set-output name=sha::$SHA"
-        cat AWS_infra/terraform.tfstate.d/dev/terraform.tfstate | jq -r .outputs.rsa_private_key.value > /tmp/b
+        cat AWS_infra/AWS_infra/terraform.tfstate.d/dev/terraform.tfstate | jq -r .outputs.rsa_private_key.value > /tmp/b
         echo la SHA en fichero
         cat /tmp/b
 
