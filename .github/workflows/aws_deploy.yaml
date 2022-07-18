@@ -124,8 +124,8 @@ jobs:
     needs: [deploy-caldera-server, wait-caldera-ssh]
     env:
       ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
-      ANSIBLE_HOST: /tmp/hosts
-      CALDERA_KEY: /tmp/sha
+      ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
+      CALDERA_KEY: ${{ github.WORKSPACE }}/sha
     steps:
     - name: Check out the code
       uses: actions/checkout@v3
