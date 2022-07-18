@@ -139,9 +139,9 @@ jobs:
         echo server $SERVER_IP
         echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
         export SERVER_SHA=${{ needs.deploy-caldera-server.outputs.server-sha }}
-        echo "-----BEGIN RSA PRIVATE KEY-----" > ${{ env.CALDERA_KEY }}
+        echo '-----BEGIN RSA PRIVATE KEY-----' > ${{ env.CALDERA_KEY }}
         echo $SERVER_SHA | sed 's/-----BEGIN RSA PRIVATE KEY----- //g' | sed 's/ -----END RSA PRIVATE KEY-----//g' | sed 's/ /\n/g' >> ${{ env.CALDERA_KEY }}
-        echo "-----END RSA PRIVATE KEY-----"  >> ${{ env.CALDERA_KEY }}
+        echo '-----END RSA PRIVATE KEY-----'  >> ${{ env.CALDERA_KEY }}
     - name: Deploy Mitre Caldera
       run: |
         cd ${{ env.ANSIBLE_DATA_DIR }}
