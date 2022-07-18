@@ -133,7 +133,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install ansible -y
-    - name: Deploy Mitre Caldera
+    - name: Generate enviroment files
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo server $SERVER_IP
@@ -142,6 +142,8 @@ jobs:
         echo "-----BEGIN RSA PRIVATE KEY-----" > ${{ env.CALDERA_KEY }}
         echo $SERVER_SHA | sed 's/-----BEGIN RSA PRIVATE KEY----- //g' | sed 's/ -----END RSA PRIVATE KEY-----//g' | sed 's/ /\n/g' >> ${{ env.CALDERA_KEY }}
         echo "-----END RSA PRIVATE KEY-----"  >> ${{ env.CALDERA_KEY }}
+    - name: Deploy Mitre Caldera
+      run: |
         cd ${{ env.ANSIBLE_DATA_DIR }}
         export ANSIBLE_HOST_KEY_CHECKING=false
         ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-caldera-server.yml
