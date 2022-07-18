@@ -61,7 +61,7 @@ jobs:
             TERRAFORM_VERSION: "1.2.4"
       run: |
         sudo apt update
-        sudo apt install -y zip jq
+        sudo apt install -y zip
         tf_version=$TERRAFORM_VERSION
         wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
         unzip terraform_"$tf_version"_linux_amd64.zip
@@ -100,10 +100,6 @@ jobs:
       run: |
         cd ${{ env.TF_DATA_DIR }}
         export IP=$(terraform output -raw caldera_server_ip)
-        export SHA=$(terraform output --raw rsa_private_key)
-        echo LA IP $IP
-        echo LA CLAVE SSH $SHA
-        terraform output --raw rsa_private_key
         echo "::set-output name=ip::$IP"
 
   wait-caldera-ssh:
@@ -180,14 +176,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install awscli==1.25.26
-#      - name: Install AWS cli
-#        uses: aws-actions/setup-sam@v2
-#        with:
-#          version: 1.53.0
-#      - name: Install terraform
-#        uses: hashicorp/setup-terraform@v2
-#        with:
-#          terraform_version: 1.2.4
       - name: Install Terraform
         env:
               TERRAFORM_VERSION: "1.2.4"
