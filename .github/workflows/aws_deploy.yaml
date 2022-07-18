@@ -61,7 +61,7 @@ jobs:
             TERRAFORM_VERSION: "1.2.4"
       run: |
         sudo apt update
-        sudo apt install zip -y
+        sudo apt install zip jq -y
         tf_version=$TERRAFORM_VERSION
         wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
         unzip terraform_"$tf_version"_linux_amd64.zip
@@ -106,13 +106,14 @@ jobs:
         terraform output --raw rsa_private_key
         echo "::set-output name=ip::$IP"
         echo "::set-output name=sha::$SHA"
-        echo ubuntu@$IP > /tmp/a
-        echo exportado $SHA
-        echo "-----BEGIN RSA PRIVATE KEY-----" > /tmp/b
-        echo $SHA | sed 's/-----BEGIN RSA PRIVATE KEY----- //g' | sed 's/ -----END RSA PRIVATE KEY-----//g' | sed 's/ /\n/g' >> /tmp/b
-        echo "-----END RSA PRIVATE KEY-----"  >> /tmp/b
-        echo la ip en fichero
-        cat /tmp/a
+#        echo ubuntu@$IP > /tmp/a
+#        echo exportado $SHA
+#        echo "-----BEGIN RSA PRIVATE KEY-----" > /tmp/b
+#        echo $SHA | sed 's/-----BEGIN RSA PRIVATE KEY----- //g' | sed 's/ -----END RSA PRIVATE KEY-----//g' | sed 's/ /\n/g' >> /tmp/b
+#        echo "-----END RSA PRIVATE KEY-----"  >> /tmp/b
+#        echo la ip en fichero
+#        cat /tmp/a
+        cat AWS_infra/terraform.tfstate.d/dev/terraform.tfstate | jq -r .outputs.rsa_private_key.value > /tmp/b
         echo la SHA en fichero
         cat /tmp/b
 
