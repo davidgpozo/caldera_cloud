@@ -146,6 +146,8 @@ jobs:
     - name: Deploy Mitre Caldera
       run: |
         cd ${{ env.ANSIBLE_DATA_DIR }}
+        ls -lah ${{ env.CALDERA_KEY }}
+        cat ${{ env.CALDERA_KEY }}
         export ANSIBLE_HOST_KEY_CHECKING=false
         ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-caldera-server.yml
 
