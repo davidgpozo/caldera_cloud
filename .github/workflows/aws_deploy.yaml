@@ -93,7 +93,7 @@ jobs:
         git config --global user.name ${{ github.actor }}
         git pull
         git add -f AWS_infra/terraform.tfs* || true
-        git commit -m "Autometed push terraform tfstate" || true
+        git commit -m "Autometed push terraform tfstate from ${{ github.RUNNER_NAME }}" || true
         git push
     - name: Export vars IP
       id: caldera-outputs
@@ -212,6 +212,8 @@ jobs:
         terraform apply deploy.tfplan
     - name: Commit report
       run: |
+        git config --global user.name ${{ github.actor }}
+        git pull
         git add -f AWS_infra/terraform.tfs* || true
-        git commit -m "Autometed push terraform tfstate" || true
+        git commit -m "Autometed push terraform tfstate from ${{ github.RUNNER_NAME }}" || true
         git push
