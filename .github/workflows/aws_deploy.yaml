@@ -106,8 +106,6 @@ jobs:
         terraform output --raw rsa_private_key
         echo "::set-output name=ip::$IP"
         echo "::set-output name=sha::$SHA"
-    - name: Generate enviroment files
-      run: |
         echo ubuntu@$IP > /tmp/a
         echo exportado $SHA
         echo "-----BEGIN RSA PRIVATE KEY-----" > /tmp/b
