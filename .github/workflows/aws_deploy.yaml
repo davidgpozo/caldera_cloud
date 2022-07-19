@@ -126,6 +126,9 @@ jobs:
     steps:
     - name: Check out the code
       uses: actions/checkout@v3
+    - name: Ensure pull the code
+      run: |
+        git pull
     - name: Install Ansible and JQ
       run: |
         sudo apt update
