@@ -146,7 +146,7 @@ jobs:
       run: |
         mkdir -p ~/.ssh
         ssh-keygen -p -N "" -f ${{ env.CALDERA_KEY }}
-        cp ${{ env.CALDERA_KEY }} > ~/.ssh/id_rsa
+        cp ${{ env.CALDERA_KEY }} ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keygen -y -f ${{ env.CALDERA_KEY }} > ~/.ssh/id_rsa.pub
         chmod 644 ~/.ssh/id_rsa.pub
