@@ -40,7 +40,7 @@ module "aws_rsa_key" {
 ### Caldera server
 #############################################################################
 resource "aws_security_group" "sg_caldera_server" {
-  name        = "sg_caldera_linux"
+  name        = "sg_caldera_server"
   description = "Allow ports for caldera server"
   vpc_id      = module.vpc.vpc_id
 
@@ -108,7 +108,7 @@ resource "aws_instance" "caldera_server" {
 ### Linux host
 #############################################################################
 resource "aws_security_group" "sg_caldera_linux" {
-  name        = "sg_caldera_web"
+  name        = "sg_caldera_linux"
   description = "Allow ssh access for linux host"
   vpc_id      = module.vpc.vpc_id
 
