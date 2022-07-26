@@ -304,13 +304,10 @@ jobs:
         chmod 644 ~/.ssh/id_rsa.pub
     - name: Install Caldera hosts
       run: |
-        ls -la ~/.ssh/
         echo la rsa
         cat  ~/.ssh/id_rsa
         echo la rsa pub
         cat  ~/.ssh/id_rsa.pub
-        ssh -o StrictHostKeychecking=no -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} ip a
-        ssh -o StrictHostKeychecking=no ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} ip a
 
         cd ${{ env.ANSIBLE_DATA_DIR }}
         cat ${{ env.CALDERA_KEY }}
