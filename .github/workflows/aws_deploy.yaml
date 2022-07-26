@@ -292,17 +292,23 @@ jobs:
         cat ${{ env.ANSIBLE_HOST }}
         cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ inputs.environment }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
         chmod 600 ${{ env.CALDERA_KEY }}
-        cat La key de las narices ${{ env.CALDERA_KEY }}
+        echo La key de las narices
+        cat ${{ env.CALDERA_KEY }}
     - name: Caldera server trust on runner
       run: |
         mkdir -p ~/.ssh
         ssh-keygen -p -N "" -f ${{ env.CALDERA_KEY }}
         cp ${{ env.CALDERA_KEY }} ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
+        echo la rsa
+        cat  ~/.ssh/id_rsa
         ssh-keygen -y -f ${{ env.CALDERA_KEY }} > ~/.ssh/id_rsa.pub
         chmod 644 ~/.ssh/id_rsa.pub
+        echo la rsa pub
+        cat  ~/.ssh/id_rsa.pub
     - name: Deploy Linux host
       run: |
+        ssh -i ${{ env.CALDERA_KEY }} ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
         ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ip a
         ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
 
