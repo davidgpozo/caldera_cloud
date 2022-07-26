@@ -146,7 +146,7 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keygen -y -f ${{ env.CALDERA_KEY }} > ~/.ssh/id_rsa.pub
         chmod 644 ~/.ssh/id_rsa.pub
-    - name: Deploy Mitre Caldera
+    - name: Install Mitre Caldera
       run: |
         cd ${{ env.ANSIBLE_DATA_DIR }}
         ls -lah ${{ env.CALDERA_KEY }}
@@ -306,10 +306,10 @@ jobs:
         chmod 644 ~/.ssh/id_rsa.pub
         echo la rsa pub
         cat  ~/.ssh/id_rsa.pub
-    - name: Deploy Mitre Caldera
+    - name: Install Caldera hosts
       run: |
-        ssh {{ needs.deploy-caldera-server.outputs.server-ip }} ip a
-        ssh {{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
+        ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ip a
+        ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
 
         cd ${{ env.ANSIBLE_DATA_DIR }}
         cat ${{ env.CALDERA_KEY }}
