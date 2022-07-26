@@ -266,7 +266,7 @@ jobs:
     - name: Install netcat on caldera server
       run: |
         export ANSIBLE_HOST_KEY_CHECKING=false
-        ansible all -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} --become-method=yes -m ansible.builtin.package  -a "name=netcat state=present"
+        ansible all -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} -bus -m ansible.builtin.package  -a "name=netcat state=present"
         #sudo apt install netcat -y
     - name: Wait for linux host respond
       run: |
