@@ -242,7 +242,7 @@ jobs:
 
   wait-hosts-ssh:
     runs-on: ubuntu-20.04
-    needs: deploy-caldera-hosts
+    needs: [deploy-caldera-server, deploy-caldera-hosts]
     steps:
     - name: Install netcat on caldera server
       run: |
