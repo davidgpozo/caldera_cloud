@@ -136,11 +136,8 @@ jobs:
     - name: Generate enviroment files
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
-        echo server $SERVER_IP
         echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
         cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ inputs.environment }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
-        echo la SHA en fichero
-        cat ${{ env.CALDERA_KEY }}
         chmod 600 ${{ env.CALDERA_KEY }}
     - name: Caldera server trust on runner
       run: |
@@ -243,17 +240,38 @@ jobs:
   wait-hosts-ssh:
     runs-on: ubuntu-20.04
     needs: [deploy-caldera-server, deploy-caldera-hosts]
+    env:
+      ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
+      ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
+      CALDERA_KEY: ${{ github.WORKSPACE }}/sha
     steps:
-    - name: Install netcat on caldera server
+    - name: Check out the code
+      uses: actions/checkout@v3
+    - name: Ensure pull the code
       run: |
-        #sudo apt update
-        #sudo apt install netcat -y
-    - name: Wait for ssh
+        git pull
+    - name: Install Ansible and JQ
+      run: |
+        sudo apt update
+        sudo apt install -y ansible jq
+    - name: Generate enviroment files
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo server $SERVER_IP
-        #while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
-        ssh ubuntu@$SERVER_IP whoami
+        echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
+        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ inputs.environment }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
+        echo la SHA en fichero
+        cat ${{ env.CALDERA_KEY }}
+        chmod 400 ${{ env.CALDERA_KEY }}
+    - name: Install netcat on caldera server
+      run: |
+        ansible all -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} --become-method -m ansible.builtin.package  -a "name=netcat state=present"
+        #sudo apt install netcat -y
+    - name: Wait for linux host respond
+      run: |
+        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        echo server $SERVER_IP
+        while ! ssh -i ${{ env.CALDERA_KEY }} ubuntu@$SERVER_IP nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 #  pruebas-openssh:
 #    runs-on: ubuntu-20.04
 #    needs: [deploy-caldera-server,deploy-caldera-hosts]
