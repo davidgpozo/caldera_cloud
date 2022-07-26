@@ -173,8 +173,8 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     outputs:
-      linux-ip: ${{ steps.caldera-outputs.outputs.ip }}
-      windows-ip: ${{ steps.caldera-outputs.outputs.sha }}
+      linux-ip: ${{ steps.host-vars.outputs.ip }}
+      windows-ip: ${{ steps.host-vars.outputs.sha }}
     steps:
     - name: Check out the code
       uses: actions/checkout@v3
@@ -229,7 +229,7 @@ jobs:
         git commit -m "Autometed push terraform tfstate from ${{ github.GITHUB_EVENT_NAME }}" || true
         git push
     - name: Export vars IPs
-      id: caldera-outputs
+      id: host-vars
       run: |
         cd ${{ env.TF_DATA_DIR }}
         export LIP=$(terraform output -raw linux_host_ip)
@@ -272,7 +272,7 @@ jobs:
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo server $SERVER_IP
-        echo ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
+        echo linux host ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
         while ! ssh -i ${{ env.CALDERA_KEY }} ubuntu@$SERVER_IP nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 #  pruebas-openssh:
 #    runs-on: ubuntu-20.04
