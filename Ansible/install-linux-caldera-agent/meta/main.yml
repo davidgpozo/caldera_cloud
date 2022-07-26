@@ -1,0 +1,7 @@
+---
+allow_duplicates: true
+dependencies: []
+
+galaxy_info:
+  author: shefirot
+  description: Linux caldera agent install for Mitre Caldera

@@ -1,0 +1,6 @@
+[nodes]
+ubuntu@172.23.35.149
+ubuntu@172.23.32.76
+
+[nodes:vars]
+ansible_ssh_common_args = '-o ServerAliveInterval=5 -o StrictHostKeyChecking=no -o ProxyCommand="ssh -W %h:%p -q ubuntu@44.204.177.59"'

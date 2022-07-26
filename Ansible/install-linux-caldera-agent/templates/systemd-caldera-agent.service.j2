@@ -1,0 +1,19 @@
+{{ ansible_managed | comment }}
+[Unit]
+Description=Agent for MITRE Caldera
+After=network.target
+
+[Service]
+Type=simple
+ExecStart={{ caldera_home }}/agent.go -server {{ caldera_server }}
+WorkingDirectory={{ caldera_home }}
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+SyslogIdentifier=caldera-agent
+User=root
+Group=nogroup
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

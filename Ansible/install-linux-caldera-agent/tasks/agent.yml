@@ -1,0 +1,49 @@
+---
+- name: Ensure dependencies are present
+  become: yes
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items: "{{ dependencies_pkg }}"
+  register: pkg_result
+  until: pkg_result is success
+
+- name: Ensure caldera user exists
+  become: yes
+  user:
+    name: "{{ caldera_user }}"
+    home: "{{ caldera_home }}"
+    shell: /bin/bash
+    system: yes
+
+- name: Get agent package
+  become: yes
+  ansible.builtin.get_url:
+    url: "{{ caldera_server }}/file/download"
+    dest: "{{ caldera_home }}/agent.go"
+    headers:
+      file: sandcat.go
+      platform: linux
+  register: Package
+
+- name: Recursively change ownership of caldera directory
+  become: yes
+  ansible.builtin.file:
+    path: "{{ caldera_home }}"
+    state: directory
+    recurse: yes
+    owner: "{{ caldera_user }}"
+    group: "{{ caldera_user }}"
+
+- name: Change file ownership, group and permissions of agent
+  become: yes
+  ansible.builtin.file:
+    path: "{{ caldera_home }}/agent.go"
+    owner: "{{ caldera_user }}"
+    group: "{{ caldera_user }}"
+    mode: '0744'
+
+
+
+

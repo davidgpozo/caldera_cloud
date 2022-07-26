@@ -1,0 +1,5 @@
+- hosts: nodes
+  roles:
+  - role: install-linux-caldera-agent
+    vars:
+      dir: '{{ node_app_dir }}/install-linux-caldera-agent/'
