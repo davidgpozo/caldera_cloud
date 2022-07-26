@@ -142,7 +142,7 @@ jobs:
         echo la SHA en fichero
         cat ${{ env.CALDERA_KEY }}
         chmod 600 ${{ env.CALDERA_KEY }}
-    - name: Test ssh
+    - name: Caldera server trust on runner
       run: |
         mkdir -p ~/.ssh
         ssh-keygen -p -N "" -f ${{ env.CALDERA_KEY }}
@@ -175,6 +175,9 @@ jobs:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    outputs:
+      linux-ip: ${{ steps.caldera-outputs.outputs.ip }}
+      windows-ip: ${{ steps.caldera-outputs.outputs.sha }}
     steps:
     - name: Check out the code
       uses: actions/checkout@v3
@@ -228,7 +231,29 @@ jobs:
         git add -f AWS_infra/terraform.tfs* || true
         git commit -m "Autometed push terraform tfstate from ${{ github.GITHUB_EVENT_NAME }}" || true
         git push
+    - name: Export vars IPs
+      id: caldera-outputs
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        export LIP=$(terraform output -raw linux_host_ip)
+        echo "::set-output name=linux-ip::$LIP"
+        export WIP=$(terraform output -raw windows_host_ip)
+        echo "::set-output name=windows-ip::$WIP"
 
+  wait-hosts-ssh:
+    runs-on: ubuntu-20.04
+    needs: deploy-caldera-hosts
+    steps:
+    - name: Install netcat on caldera server
+      run: |
+        #sudo apt update
+        #sudo apt install netcat -y
+    - name: Wait for ssh
+      run: |
+        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        echo server $SERVER_IP
+        #while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
+        ssh ubuntu@$SERVER_IP whoami
 #  pruebas-openssh:
 #    runs-on: ubuntu-20.04
 #    needs: [deploy-caldera-server,deploy-caldera-hosts]
