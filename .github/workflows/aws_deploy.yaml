@@ -300,14 +300,16 @@ jobs:
         ssh-keygen -p -N "" -f ${{ env.CALDERA_KEY }}
         cp ${{ env.CALDERA_KEY }} ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        echo la rsa
-        cat  ~/.ssh/id_rsa
         ssh-keygen -y -f ${{ env.CALDERA_KEY }} > ~/.ssh/id_rsa.pub
         chmod 644 ~/.ssh/id_rsa.pub
-        echo la rsa pub
-        cat  ~/.ssh/id_rsa.pub
     - name: Install Caldera hosts
       run: |
+        ls -la ~/.ssh/
+        echo la rsa
+        cat  ~/.ssh/id_rsa
+        echo la rsa pub
+        cat  ~/.ssh/id_rsa.pub
+        ssh -i ${{ env.CALDERA_KEY }} ${{ needs.deploy-caldera-server.outputs.server-ip }} ip a
         ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ip a
         ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
 
