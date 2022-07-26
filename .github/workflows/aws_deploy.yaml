@@ -262,7 +262,7 @@ jobs:
         cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ inputs.environment }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
         echo la SHA en fichero
         cat ${{ env.CALDERA_KEY }}
-        chmod 400 ${{ env.CALDERA_KEY }}
+        chmod 600 ${{ env.CALDERA_KEY }}
     - name: Install netcat on caldera server
       run: |
         ansible all -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} --become-method=yes -m ansible.builtin.package  -a "name=netcat state=present"
