@@ -272,6 +272,7 @@ jobs:
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo server $SERVER_IP
+        echo ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
         while ! ssh -i ${{ env.CALDERA_KEY }} ubuntu@$SERVER_IP nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 #  pruebas-openssh:
 #    runs-on: ubuntu-20.04
