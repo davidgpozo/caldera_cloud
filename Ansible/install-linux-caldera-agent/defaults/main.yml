@@ -1,4 +1,4 @@
 ---
 caldera_user: caldera
 caldera_home: /var/caldera
-caldera_server: http://172.23.6.95:2288
+caldera_server: http://172.23.0.95:2288

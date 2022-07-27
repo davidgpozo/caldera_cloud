@@ -89,7 +89,7 @@ variable "caldera_server_instance_type" {
 variable "caldera_server_private_ip" {
   description = "Private IP for caldera server"
   type        = string
-  default     = "172.23.6.95"
+  default     = "172.23.0.95"
 }
 
 #####################################
@@ -110,7 +110,7 @@ variable "linux_host_instance_type" {
 variable "linux_host_private_ip" {
   description = "Private IP for linux host"
   type        = string
-  default     = "172.23.38.95"
+  default     = "172.23.32.95"
 }
 
 #####################################
@@ -131,5 +131,5 @@ variable "windows_host_instance_type" {
 variable "windows_host_private_ip" {
   description = "Private IP for linux host"
   type        = string
-  default     = "172.23.70.95"
+  default     = "172.23.64.95"
 }

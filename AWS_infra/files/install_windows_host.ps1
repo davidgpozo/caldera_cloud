@@ -1,5 +1,5 @@
 <powershell>
-$server="http://172.23.6.95:2288";
+$server="http://172.23.0.95:2288";
 $url="$server/file/download";
 $wc=New-Object System.Net.WebClient;
 $wc.Headers.add("platform","windows");
