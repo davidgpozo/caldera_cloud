@@ -164,78 +164,78 @@ jobs:
         echo $SERVER_IP
         while ! curl -H "KEY:redAPIKeySantander22" http://$SERVER_IP:2288/api/v2/agents &>/dev/null; do echo "Curl Fail - `date`" && sleep 1; done
 
-#  deploy-caldera-hosts:
-#    runs-on: ubuntu-20.04
-#    needs: wait-caldera-server
-#    env:
-#      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
-#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#    outputs:
-#      linux-ip: ${{ steps.host-vars.outputs.linux-ip }}
-#      windows-ip: ${{ steps.host-vars.outputs.windows-ip }}
-#    steps:
-#    - name: Check out the code
-#      uses: actions/checkout@v3
-#    - name: Ensure pull the code
-#      run: |
-#        git pull
-#    - name: Install python 3
-#      uses: actions/setup-python@v3
-#      with:
-#        python-version: "3.8"
-#    - name: Install AWS cli
-#      run: |
-#        python -m pip install --upgrade pip
-#        pip install awscli==1.25.26
-#    - name: Install Terraform
-#      env:
-#            TERRAFORM_VERSION: "1.2.4"
-#      run: |
-#        sudo apt update
-#        sudo apt install zip -y
-#        tf_version=$TERRAFORM_VERSION
-#        wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
-#        unzip terraform_"$tf_version"_linux_amd64.zip
-#        sudo mv terraform /usr/local/bin/
-#    - name: Verify Terraform version
-#      run: |
-#        terraform --version
-#    - name: Terraform workspace
-#      run: |
-#        terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
-#    - name: Terraform init
-#      run: |
-#        cd ${{ env.TF_DATA_DIR }}
-#        terraform init -input=false
-#    - name: Terraform validation
-#      run: |
-#        cd ${{ env.TF_DATA_DIR }}
-#        terraform validate
-#    - name: Terraform plan
-#      run: |
-#        cd ${{ env.TF_DATA_DIR }}
-#        terraform plan -out=deploy.tfplan
-#    - name: Terraform apply
-#      run: |
-#        cd ${{ env.TF_DATA_DIR }}
-#        terraform apply deploy.tfplan
-#    - name: Commit report
-#      run: |
-#        git config --global user.name ${{ github.actor }}
-#        git pull
-#        git add -f AWS_infra/terraform.tfs* || true
-#        git commit -m "Autometed push terraform tfstate from ${{ github.GITHUB_EVENT_NAME }}" || true
-#        git push
-#    - name: Export vars IPs
-#      id: host-vars
-#      run: |
-#        cd ${{ env.TF_DATA_DIR }}
-#        export LIP=$(terraform output -raw linux_host_ip)
-#        echo "::set-output name=linux-ip::$LIP"
-#        export WIP=$(terraform output -raw windows_host_ip)
-#        echo "::set-output name=windows-ip::$WIP"
-#
+  deploy-caldera-hosts:
+    runs-on: ubuntu-20.04
+    needs: wait-caldera-server
+    env:
+      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    outputs:
+      linux-ip: ${{ steps.host-vars.outputs.linux-ip }}
+      windows-ip: ${{ steps.host-vars.outputs.windows-ip }}
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v3
+    - name: Ensure pull the code
+      run: |
+        git pull
+    - name: Install python 3
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8"
+    - name: Install AWS cli
+      run: |
+        python -m pip install --upgrade pip
+        pip install awscli==1.25.26
+    - name: Install Terraform
+      env:
+            TERRAFORM_VERSION: "1.2.4"
+      run: |
+        sudo apt update
+        sudo apt install zip -y
+        tf_version=$TERRAFORM_VERSION
+        wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+        unzip terraform_"$tf_version"_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+    - name: Verify Terraform version
+      run: |
+        terraform --version
+    - name: Terraform workspace
+      run: |
+        terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
+    - name: Terraform init
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform init -input=false
+    - name: Terraform validation
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform validate
+    - name: Terraform plan
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform plan -out=deploy.tfplan
+    - name: Terraform apply
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform apply deploy.tfplan
+    - name: Commit report
+      run: |
+        git config --global user.name ${{ github.actor }}
+        git pull
+        git add -f AWS_infra/terraform.tfs* || true
+        git commit -m "Autometed push terraform tfstate from ${{ github.GITHUB_EVENT_NAME }}" || true
+        git push
+    - name: Export vars IPs
+      id: host-vars
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        export LIP=$(terraform output -raw linux_host_ip)
+        echo "::set-output name=linux-ip::$LIP"
+        export WIP=$(terraform output -raw windows_host_ip)
+        echo "::set-output name=windows-ip::$WIP"
+
 #  wait-hosts-ssh:
 #    runs-on: ubuntu-20.04
 #    needs: [deploy-caldera-server, deploy-caldera-hosts]
@@ -266,7 +266,7 @@ jobs:
 #        #sudo apt install netcat -y
 #    - name: Wait for linux host respond
 #      run: |
-#        while ! ssh -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
+#        while ! ssh -o StrictHostKeychecking=no -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 #
 #  ansible-install-hosts:
 #    runs-on: ubuntu-20.04
