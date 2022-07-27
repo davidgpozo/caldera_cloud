@@ -15,14 +15,22 @@ on:
 #        description: 'True to print to STDOUT'
 #        required: true
 #        type: boolean
-      environment:
-        description: 'Environment to run against'
+      cloud:
+        description: 'Cloud to deploy against'
         type: choice
         required: true
-        default: "AWS dev"
+        default: "AWS"
         options:
-        - AWS dev
-        - Azure dev
+        - AWS
+        - Azure
+      account:
+        description: 'Account where deploy'
+        type: choice
+        required: true
+        default: "ASM"
+        options:
+        - ASM
+        - ACD
 
 jobs:
 
@@ -44,7 +52,7 @@ jobs:
       with:
         python-version: "3.8"
     - name: Install AWS cli
-      if: contains(inputs.environment, 'AWS')
+      if: inputs.cloud == 'AWS'
       run: |
         python -m pip install --upgrade pip
         pip install awscli==1.25.26
