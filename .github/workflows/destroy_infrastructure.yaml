@@ -1,4 +1,4 @@
-name: AWS destroy
+name: Destroy infrastructure
 on:
   workflow_dispatch:
     inputs:
