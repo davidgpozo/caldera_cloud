@@ -65,6 +65,7 @@ jobs:
 #      with:
 #        terraform_version: 1.2.4
     - name: Install Terraform
+      if: inputs.cloud == 'Azure'
       env:
             TERRAFORM_VERSION: "1.2.4"
       run: |
