@@ -230,3 +230,7 @@ fabric.properties
 .idea/**
 .idea/*
 .idea
+
+
+id_rsa
+id_rsa.pub

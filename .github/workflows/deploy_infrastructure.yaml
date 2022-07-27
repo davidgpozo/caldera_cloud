@@ -2,27 +2,27 @@ name: AWS deploy
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
-      print_tags:
-        description: 'True to print to STDOUT'
-        required: true
-        type: boolean
+#      logLevel:
+#        description: 'Log level'
+#        required: true
+#        default: 'warning'
+#        type: choice
+#        options:
+#        - info
+#        - warning
+#        - debug
+#      print_tags:
+#        description: 'True to print to STDOUT'
+#        required: true
+#        type: boolean
       environment:
         description: 'Environment to run against'
         type: choice
         required: true
-        default: "dev"
+        default: "AWS dev"
         options:
-        - dev
-        - pro
+        - AWS dev
+        - AZURE dev
 
 jobs:
 
@@ -44,6 +44,7 @@ jobs:
       with:
         python-version: "3.8"
     - name: Install AWS cli
+      if: contains(inputs.environment, 'AWS')
       run: |
         python -m pip install --upgrade pip
         pip install awscli==1.25.26
@@ -269,57 +270,57 @@ jobs:
         ssh -o StrictHostKeychecking=no -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22
         while ! ssh -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 
-  ansible-install-hosts:
-    runs-on: ubuntu-20.04
-    needs: [deploy-caldera-server, deploy-caldera-hosts, wait-hosts-ssh]
-    env:
-      ORG_HOST_FILE: ${{ github.WORKSPACE }}/.github/files/agent-hosts
-      ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
-      ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
-      CALDERA_KEY: ${{ github.WORKSPACE }}/sha
-    steps:
-    - name: Check out the code
-      uses: actions/checkout@v3
-    - name: Ensure pull the code
-      run: |
-        git pull
-    - name: Install Ansible, jq and sed
-      run: |
-        sudo apt update
-        sudo apt install -y ansible jq sed
-    - name: Generate enviroment files
-      run: |
-        cat ${{ env.ORG_HOST_FILE }} | sed s+LINUX-IP+${{ needs.deploy-caldera-hosts.outputs.linux-ip }}+g | sed s+CALDERA-IP+${{ needs.deploy-caldera-server.outputs.server-ip }}+g > ${{ env.ANSIBLE_HOST }}
-        cat ${{ env.ANSIBLE_HOST }}
-        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ inputs.environment }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
-        chmod 600 ${{ env.CALDERA_KEY }}
-        echo La key de las narices
-        cat ${{ env.CALDERA_KEY }}
-    - name: Caldera server trust on runner
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keygen -p -N "" -f ${{ env.CALDERA_KEY }}
-        cp ${{ env.CALDERA_KEY }} ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keygen -y -f ${{ env.CALDERA_KEY }} > ~/.ssh/id_rsa.pub
-        chmod 644 ~/.ssh/id_rsa.pub
-    - name: Install Caldera hosts
-      run: |
-        echo la rsa
-        cat  ~/.ssh/id_rsa
-        echo la rsa pub
-        cat  ~/.ssh/id_rsa.pub
-
-        cd ${{ env.ANSIBLE_DATA_DIR }}
-        cat ${{ env.CALDERA_KEY }}
-        export ANSIBLE_HOST_KEY_CHECKING=false
-        ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-linux-caldera-agent.yml
-    - name: Deploy Linux host
-      run: |
-        ssh -i ${{ env.CALDERA_KEY }} ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
-        ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ip a
-        ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
-
-        cd ${{ env.ANSIBLE_DATA_DIR }}
-        export ANSIBLE_HOST_KEY_CHECKING=false
-        ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-linux-caldera-agent.yml
+#  ansible-install-hosts:
+#    runs-on: ubuntu-20.04
+#    needs: [deploy-caldera-server, deploy-caldera-hosts, wait-hosts-ssh]
+#    env:
+#      ORG_HOST_FILE: ${{ github.WORKSPACE }}/.github/files/agent-hosts
+#      ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
+#      ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
+#      CALDERA_KEY: ${{ github.WORKSPACE }}/sha
+#    steps:
+#    - name: Check out the code
+#      uses: actions/checkout@v3
+#    - name: Ensure pull the code
+#      run: |
+#        git pull
+#    - name: Install Ansible, jq and sed
+#      run: |
+#        sudo apt update
+#        sudo apt install -y ansible jq sed
+#    - name: Generate enviroment files
+#      run: |
+#        cat ${{ env.ORG_HOST_FILE }} | sed s+LINUX-IP+${{ needs.deploy-caldera-hosts.outputs.linux-ip }}+g | sed s+CALDERA-IP+${{ needs.deploy-caldera-server.outputs.server-ip }}+g > ${{ env.ANSIBLE_HOST }}
+#        cat ${{ env.ANSIBLE_HOST }}
+#        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ inputs.environment }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
+#        chmod 600 ${{ env.CALDERA_KEY }}
+#        echo La key de las narices
+#        cat ${{ env.CALDERA_KEY }}
+#    - name: Caldera server trust on runner
+#      run: |
+#        mkdir -p ~/.ssh
+#        ssh-keygen -p -N "" -f ${{ env.CALDERA_KEY }}
+#        cp ${{ env.CALDERA_KEY }} ~/.ssh/id_rsa
+#        chmod 600 ~/.ssh/id_rsa
+#        ssh-keygen -y -f ${{ env.CALDERA_KEY }} > ~/.ssh/id_rsa.pub
+#        chmod 644 ~/.ssh/id_rsa.pub
+#    - name: Install Caldera hosts
+#      run: |
+#        echo la rsa
+#        cat  ~/.ssh/id_rsa
+#        echo la rsa pub
+#        cat  ~/.ssh/id_rsa.pub
+#
+#        cd ${{ env.ANSIBLE_DATA_DIR }}
+#        cat ${{ env.CALDERA_KEY }}
+#        export ANSIBLE_HOST_KEY_CHECKING=false
+#        ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-linux-caldera-agent.yml
+#    - name: Deploy Linux host
+#      run: |
+#        ssh -i ${{ env.CALDERA_KEY }} ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
+#        ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ip a
+#        ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
+#
+#        cd ${{ env.ANSIBLE_DATA_DIR }}
+#        export ANSIBLE_HOST_KEY_CHECKING=false
+#        ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-linux-caldera-agent.yml
