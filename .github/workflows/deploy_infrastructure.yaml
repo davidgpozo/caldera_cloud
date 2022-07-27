@@ -22,7 +22,7 @@ on:
         default: "AWS dev"
         options:
         - AWS dev
-        - AZURE dev
+        - Azure dev
 
 jobs:
 
