@@ -89,7 +89,7 @@ variable "caldera_server_instance_type" {
 variable "caldera_server_private_ip" {
   description = "Private IP for caldera server"
   type        = string
-  default     = "172.23.0.95"
+  default     = "172.23.4.95"
 }
 
 #####################################
