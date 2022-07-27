@@ -60,21 +60,21 @@ resource "aws_security_group" "sg_caldera_server" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-#  ingress {
-#    description = "Caldera server contact tcp port"
-#    from_port   = 7010
-#    to_port     = 7010
-#    protocol    = "tcp"
-#    cidr_blocks = ["0.0.0.0/0"]
-#  }
-#
-#  ingress {
-#    description = "Caldera server contact udp port"
-#    from_port   = 7011
-#    to_port     = 7011
-#    protocol    = "udp"
-#    cidr_blocks = ["0.0.0.0/0"]
-#  }
+  #  ingress {
+  #    description = "Caldera server contact tcp port"
+  #    from_port   = 7010
+  #    to_port     = 7010
+  #    protocol    = "tcp"
+  #    cidr_blocks = ["0.0.0.0/0"]
+  #  }
+  #
+  #  ingress {
+  #    description = "Caldera server contact udp port"
+  #    from_port   = 7011
+  #    to_port     = 7011
+  #    protocol    = "udp"
+  #    cidr_blocks = ["0.0.0.0/0"]
+  #  }
 
   egress {
     from_port   = 0
@@ -95,9 +95,9 @@ resource "aws_instance" "caldera_server" {
   subnet_id                   = element(module.vpc.public_subnets, 0)
   vpc_security_group_ids      = [aws_security_group.sg_caldera_server.id]
   key_name                    = var.rsa_key_name
-#  user_data                   = file("files/install_caldera_server.sh")
-  depends_on                  = [module.aws_rsa_key]
-  private_ip                  = "172.23.6.95"
+  #  user_data                   = file("files/install_caldera_server.sh")
+  depends_on = [module.aws_rsa_key]
+  private_ip = var.caldera_server_private_ip
   tags = {
     environment = var.environment
     Name        = "caldera_server"
@@ -139,8 +139,9 @@ resource "aws_instance" "linux_host" {
   subnet_id              = element(module.vpc.private_subnets, 0)
   vpc_security_group_ids = [aws_security_group.sg_caldera_linux.id]
   key_name               = var.rsa_key_name
-#  user_data              = file("files/install_linux_host.sh")
-  depends_on             = [module.aws_rsa_key, aws_instance.caldera_server, aws_instance.caldera_server]
+  #  user_data              = file("files/install_linux_host.sh")
+  depends_on = [module.aws_rsa_key, aws_instance.caldera_server, aws_instance.caldera_server]
+  private_ip = var.linux_host_private_ip
 
   tags = {
     environment = var.environment
@@ -181,11 +182,11 @@ resource "aws_instance" "windows_host" {
   ami                    = var.windows_host_ami
   instance_type          = var.windows_host_instance_type
   subnet_id              = element(module.vpc.public_subnets, 0)
-  associate_public_ip_address = true
   vpc_security_group_ids = [aws_security_group.sg_caldera_windows.id]
   key_name               = var.rsa_key_name
   user_data              = file("files/install_windows_host.ps1")
   depends_on             = [module.aws_rsa_key, aws_instance.caldera_server]
+  private_ip             = var.windows_host_private_ip
   tags = {
     environment = var.environment
     Name        = "windows_host"

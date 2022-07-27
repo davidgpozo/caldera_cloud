@@ -86,6 +86,12 @@ variable "caldera_server_instance_type" {
   default     = "t2.micro"
 }
 
+variable "caldera_server_private_ip" {
+  description = "Private IP for caldera server"
+  type        = string
+  default     = "172.23.6.95"
+}
+
 #####################################
 ### Linux host
 #####################################
@@ -101,6 +107,12 @@ variable "linux_host_instance_type" {
   default     = "t2.micro"
 }
 
+variable "linux_host_private_ip" {
+  description = "Private IP for linux host"
+  type        = string
+  default     = "172.23.38.95"
+}
+
 #####################################
 ### Windows host
 #####################################
@@ -114,4 +126,10 @@ variable "windows_host_instance_type" {
   description = "Instance type for windows host"
   type        = string
   default     = "t2.micro"
+}
+
+variable "windows_host_private_ip" {
+  description = "Private IP for linux host"
+  type        = string
+  default     = "172.23.70.95"
 }
