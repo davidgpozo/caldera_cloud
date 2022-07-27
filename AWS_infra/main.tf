@@ -181,7 +181,7 @@ resource "aws_security_group" "sg_caldera_windows" {
 resource "aws_instance" "windows_host" {
   ami                    = var.windows_host_ami
   instance_type          = var.windows_host_instance_type
-  subnet_id              = element(module.vpc.public_subnets, 0)
+  subnet_id              = element(module.vpc.private_subnets, 0)
   vpc_security_group_ids = [aws_security_group.sg_caldera_windows.id]
   key_name               = var.rsa_key_name
   user_data              = file("files/install_windows_host.ps1")

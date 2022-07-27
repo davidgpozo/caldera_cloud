@@ -266,7 +266,8 @@ jobs:
 #        #sudo apt install netcat -y
 #    - name: Wait for linux host respond
 #      run: |
-#        while ! ssh -o StrictHostKeychecking=no -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
+#        ssh -o StrictHostKeychecking=no -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22
+#        while ! ssh -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 #
 #  ansible-install-hosts:
 #    runs-on: ubuntu-20.04
