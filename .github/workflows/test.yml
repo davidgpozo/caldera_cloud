@@ -34,5 +34,5 @@ jobs:
         echo Acces key
         echo $AWS_ACCESS_KEY_ID
         export ID=${{ inputs.cloud }}_ACCESS_KEY_ID
-        echo "::set-env name=AAWS_ACCESS_KEY_ID::${{ secrets[env.AS_ACCESS_KEY_ID] }}"
-        echo la key de aws $AAWS_ACCESS_KEY_ID
+        echo "::set-env name=AS_ACCESS_KEY_ID::${{ secrets[env.AS_ACCESS_KEY_ID] }}"
+        echo la key de aws $AS_ACCESS_KEY_ID
