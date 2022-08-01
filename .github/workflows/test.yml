@@ -20,7 +20,6 @@ on:
         - ACD
 
 jobs:
-
   deploy-caldera-server:
     runs-on: ubuntu-20.04
     env:
