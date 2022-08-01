@@ -33,5 +33,6 @@ jobs:
         echo Acces key
         echo $AWS_ACCESS_KEY_ID
         export ID=${{ inputs.cloud }}_ACCESS_KEY_ID
+        export DEPLOY_ID=${{ secrets.$ID }}
         echo El ID es $ID
         echo variable cloud ${{ inputs.cloud }}
