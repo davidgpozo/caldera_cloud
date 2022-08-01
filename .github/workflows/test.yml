@@ -23,8 +23,8 @@ jobs:
   deploy-caldera-server:
     runs-on: ubuntu-20.04
     env:
-      AS_ACCESS_KEY_ID: ${{ inputs.cloud }}_ACCESS_KEY_ID
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_ACCESS_KEY_ID: ${{ inputs.cloud }}_ACCESS_KEY_ID
+#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
     - name: Check out the code
@@ -35,4 +35,4 @@ jobs:
         echo $AWS_ACCESS_KEY_ID
         export ID=${{ inputs.cloud }}_ACCESS_KEY_ID
         echo "::set-env name=AS_ACCESS_KEY_ID::${{ secrets[env.AS_ACCESS_KEY_ID] }}"
-        echo la key de aws $AS_ACCESS_KEY_ID
+        #echo la key de aws $AS_ACCESS_KEY_ID
