@@ -32,6 +32,6 @@ jobs:
       run: |
         echo Acces key
         echo $AWS_ACCESS_KEY_ID
-        export $ID=${{ inputs.cloud }}_ACCESS_KEY_ID
+        export ID=${{ inputs.cloud }}_ACCESS_KEY_ID
         echo El ID es $ID
         echo variable cloud ${{ inputs.cloud }}
