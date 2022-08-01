@@ -1,0 +1,39 @@
+name: Deploy infrastructure
+on:
+  workflow_dispatch:
+    inputs:
+      cloud:
+        description: 'Cloud to deploy against'
+        type: choice
+        required: true
+        default: "AWS"
+        options:
+        - AWS
+        - Azure
+      account:
+        description: 'Account where deploy'
+        type: choice
+        required: true
+        default: "ASM"
+        options:
+        - ASM
+        - ACD
+
+jobs:
+
+  deploy-caldera-server:
+#    runs-on: self-hosted
+    runs-on: ubuntu-20.04
+#    if:  ${{ inputs.print_tags }}
+    env:
+      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
+      AWS_ACCESS_KEY_ID: ${{ secrets.${{ inputs.cloud }}_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    outputs:
+      server-ip: ${{ steps.caldera-outputs.outputs.ip }}
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v3
+    - name: test
+      run: |
+        echo $AWS_ACCESS_KEY_ID

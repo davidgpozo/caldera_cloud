@@ -47,18 +47,6 @@ variable "public_subnets" {
   default = []
 }
 
-
-variable "database_subnets" {
-  type    = list(string)
-  default = []
-}
-
-
-variable "redshift_subnets" {
-  type    = list(string)
-  default = []
-}
-
 #####################################
 ### RSA keys var for EKS
 #####################################
