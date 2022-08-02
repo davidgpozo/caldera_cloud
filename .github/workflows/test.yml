@@ -27,7 +27,7 @@ jobs:
 #      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #      AWS_ACCESS_KEY_ID: ${{ secrets[env.ID] }}
 #      AWS_ACCESS_KEY_ID: format('{{ {0}_{1}_ID }}', ${{ inputs.cloud }}, ${{ inputs.account }})
-      AWS_ACCESS_KEY_ID: format('Hello {0} {1} {2}', 'Mona', 'the', 'Octocat')
+      AWS_ACCESS_KEY_ID: ${{ format('Hello {0} {1} {2}', 'Mona', 'the', 'Octocat') }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 #      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
