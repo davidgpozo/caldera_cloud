@@ -39,9 +39,10 @@ jobs:
     runs-on: ubuntu-20.04
 #    if:  ${{ inputs.print_tags }}
     env:
-      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
       AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
+      ENVIRONMENT: ${{ [format('{0}_{1}', inputs.cloud, inputs.account)] }}
+      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
 #      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     outputs:
@@ -67,9 +68,8 @@ jobs:
 #      with:
 #        terraform_version: 1.2.4
     - name: Install Terraform
-      if: inputs.cloud == 'Azure'
       env:
-            TERRAFORM_VERSION: "1.2.4"
+        TERRAFORM_VERSION: "1.2.4"
       run: |
         sudo apt update
         sudo apt install -y zip
@@ -82,7 +82,7 @@ jobs:
         terraform --version
     - name: Terraform workspace
       run: |
-        terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
+        terraform workspace new ${{ env.ENVIRONMENT }} || terraform workspace select ${{ env.ENVIRONMENT }}
     - name: Terraform init
       run: |
         cd ${{ env.TF_DATA_DIR }}
@@ -132,6 +132,7 @@ jobs:
       ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
       ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
       CALDERA_KEY: ${{ github.WORKSPACE }}/sha
+      ENVIRONMENT: ${{ [format('{0}_{1}', inputs.cloud, inputs.account)] }}
     steps:
     - name: Check out the code
       uses: actions/checkout@v3
@@ -146,7 +147,7 @@ jobs:
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
-        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ inputs.environment }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
+        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
         chmod 600 ${{ env.CALDERA_KEY }}
     - name: Caldera server trust on runner
       run: |
@@ -176,9 +177,10 @@ jobs:
     runs-on: ubuntu-20.04
     needs: wait-caldera-server
     env:
-      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
       AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
+      ENVIRONMENT: ${{ [format('{0}_{1}', inputs.cloud, inputs.account)] }}
+      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
     outputs:
       linux-ip: ${{ steps.host-vars.outputs.linux-ip }}
       windows-ip: ${{ steps.host-vars.outputs.windows-ip }}
@@ -198,7 +200,7 @@ jobs:
         pip install awscli==1.25.26
     - name: Install Terraform
       env:
-            TERRAFORM_VERSION: "1.2.4"
+        TERRAFORM_VERSION: "1.2.4"
       run: |
         sudo apt update
         sudo apt install zip -y
@@ -211,7 +213,7 @@ jobs:
         terraform --version
     - name: Terraform workspace
       run: |
-        terraform workspace new ${{ inputs.environment }} || terraform workspace select ${{ inputs.environment }}
+        terraform workspace new ${{ env.ENVIRONMENT }} || terraform workspace select ${{ env.ENVIRONMENT }}
     - name: Terraform init
       run: |
         cd ${{ env.TF_DATA_DIR }}
@@ -247,10 +249,10 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [deploy-caldera-server, deploy-caldera-hosts]
     env:
-      GITHUB_DIR_FILES: ${{ github.WORKSPACE }}/.github/files
       ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
       ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
       CALDERA_KEY: ${{ github.WORKSPACE }}/sha
+      GITHUB_DIR_FILES: ${{ github.WORKSPACE }}/.github/files
     steps:
     - name: Check out the code
       uses: actions/checkout@v3
@@ -264,7 +266,7 @@ jobs:
     - name: Generate enviroment files
       run: |
         echo ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} > ${{ env.ANSIBLE_HOST }}
-        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ inputs.environment }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
+        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
         chmod 600 ${{ env.CALDERA_KEY }}
     - name: Install netcat on caldera server
       run: |
@@ -279,10 +281,11 @@ jobs:
 #    runs-on: ubuntu-20.04
 #    needs: [deploy-caldera-server, deploy-caldera-hosts, wait-hosts-ssh]
 #    env:
-#      ORG_HOST_FILE: ${{ github.WORKSPACE }}/.github/files/agent-hosts
 #      ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
 #      ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
 #      CALDERA_KEY: ${{ github.WORKSPACE }}/sha
+#      ENVIRONMENT: ${{ [format('{0}_{1}', inputs.cloud, inputs.account)] }}
+#      ORG_HOST_FILE: ${{ github.WORKSPACE }}/.github/files/agent-hosts
 #    steps:
 #    - name: Check out the code
 #      uses: actions/checkout@v3
@@ -297,7 +300,7 @@ jobs:
 #      run: |
 #        cat ${{ env.ORG_HOST_FILE }} | sed s+LINUX-IP+${{ needs.deploy-caldera-hosts.outputs.linux-ip }}+g | sed s+CALDERA-IP+${{ needs.deploy-caldera-server.outputs.server-ip }}+g > ${{ env.ANSIBLE_HOST }}
 #        cat ${{ env.ANSIBLE_HOST }}
-#        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ inputs.environment }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
+#        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
 #        chmod 600 ${{ env.CALDERA_KEY }}
 #        echo La key de las narices
 #        cat ${{ env.CALDERA_KEY }}
