@@ -41,7 +41,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
-      ENVIRONMENT: ${{ [format('{0}_{1}', inputs.cloud, inputs.account)] }}
+      ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
 #      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
 #      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -132,7 +132,7 @@ jobs:
       ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
       ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
       CALDERA_KEY: ${{ github.WORKSPACE }}/sha
-      ENVIRONMENT: ${{ [format('{0}_{1}', inputs.cloud, inputs.account)] }}
+      ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
     steps:
     - name: Check out the code
       uses: actions/checkout@v3
@@ -179,7 +179,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
-      ENVIRONMENT: ${{ [format('{0}_{1}', inputs.cloud, inputs.account)] }}
+      ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
     outputs:
       linux-ip: ${{ steps.host-vars.outputs.linux-ip }}
@@ -284,7 +284,7 @@ jobs:
 #      ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
 #      ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
 #      CALDERA_KEY: ${{ github.WORKSPACE }}/sha
-#      ENVIRONMENT: ${{ [format('{0}_{1}', inputs.cloud, inputs.account)] }}
+#      ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
 #      ORG_HOST_FILE: ${{ github.WORKSPACE }}/.github/files/agent-hosts
 #    steps:
 #    - name: Check out the code
