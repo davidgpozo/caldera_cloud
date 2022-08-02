@@ -40,8 +40,10 @@ jobs:
 #    if:  ${{ inputs.print_tags }}
     env:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
+#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     outputs:
       server-ip: ${{ steps.caldera-outputs.outputs.ip }}
     steps:
@@ -175,8 +177,8 @@ jobs:
     needs: wait-caldera-server
     env:
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
     outputs:
       linux-ip: ${{ steps.host-vars.outputs.linux-ip }}
       windows-ip: ${{ steps.host-vars.outputs.windows-ip }}

@@ -23,12 +23,8 @@ jobs:
   deploy-caldera-server:
     runs-on: ubuntu-20.04
     env:
-#      ID: ${{ inputs.cloud }}_ACCESS_KEY_ID
-#      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#      AWS_ACCESS_KEY_ID: ${{ secrets[env.ID] }}
-#      AWS_ACCESS_KEY_ID: format('{{ {0}_{1}_ID }}', ${{ inputs.cloud }}, ${{ inputs.account }})
-      AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_IDS', inputs.cloud, inputs.account)] }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
 #      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
 #    - name: Install AZ cli
