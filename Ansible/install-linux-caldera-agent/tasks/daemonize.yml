@@ -22,9 +22,3 @@
     name: caldera-agent
     enabled: yes
     state: 'started'
-
-#- name: Restart Caldera agent sevice
-#  become: yes
-#  ansible.builtin.systemd:
-#    state: 'restarted'
-#    name: caldera-agent

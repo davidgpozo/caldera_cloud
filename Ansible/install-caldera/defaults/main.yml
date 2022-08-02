@@ -1,6 +1,6 @@
 ---
 # v2.3.2
-caldera_version: 9d2b7c85
+caldera_version: 4fe71ac87468e97665f3f26516137a442c7fab32
 caldera_user: caldera
 caldera_home: /var/caldera
 caldera_rootdir: /var/caldera/caldera

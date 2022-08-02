@@ -11,7 +11,7 @@
 
 - name: Ensure caldera user exists
   become: yes
-  user:
+  ansible.builtin.user:
     name: "{{ caldera_user }}"
     home: "{{ caldera_home }}"
     shell: /bin/bash
