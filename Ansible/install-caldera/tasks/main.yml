@@ -3,6 +3,6 @@
   include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
   when: ansible_os_family == "Debian"
 
-- include: caldera.yml
+- include_tasks: caldera.yml
 
-- include: daemonize.yml
+- include_tasks: daemonize.yml
