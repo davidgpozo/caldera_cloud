@@ -25,7 +25,6 @@
     version: "{{ caldera_version }}"
     update: false
     recursive: true
-  register: result
 
 - name: Recursively change ownership of caldera directory
   ansible.builtin.file:
