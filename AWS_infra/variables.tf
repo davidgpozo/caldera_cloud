@@ -48,7 +48,7 @@ variable "public_subnets" {
 }
 
 #####################################
-### RSA keys var for EKS
+### RSA keys
 #####################################
 variable "rsa_key_path" {
   type = string
