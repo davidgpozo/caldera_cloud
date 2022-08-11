@@ -33,12 +33,10 @@ on:
         - ACD
 
 jobs:
-
   deploy-caldera-server:
 #    runs-on: self-hosted
     runs-on: ubuntu-20.04
 #    if:  ${{ inputs.print_tags }}
-    if: inputs.cloud == 'AWS'
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
@@ -91,10 +89,12 @@ jobs:
         cd ${{ env.TF_DATA_DIR }}
         terraform validate
     - name: Terraform plan
+      if: inputs.cloud == 'AWS'
       run: |
         cd ${{ env.TF_DATA_DIR }}
         terraform plan -target=aws_instance.caldera_server  -out=deploy.tfplan
     - name: Terraform apply
+      if: inputs.cloud == 'AWS'
       run: |
         cd ${{ env.TF_DATA_DIR }}
         terraform apply deploy.tfplan

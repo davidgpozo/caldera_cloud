@@ -1,9 +1,13 @@
-#output "rsa_private_key" {
-#  value = nonsensitive(module.aws_rsa_key.private_rsa_key)
-#}
-#
+output "rsa_private_key" {
+  value = nonsensitive(module.azure_rsa_key.private_rsa_key)
+}
+
 output "caldera_server_ip" {
   value = azurerm_linux_virtual_machine.caldera-server.public_ip_address
+}
+
+output "caldera_server_user" {
+  value = azurerm_linux_virtual_machine.caldera-server.admin_username
 }
 
 output "caldera_server_id" {

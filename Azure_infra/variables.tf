@@ -45,6 +45,13 @@ variable "az_prefix" {
 #####################################
 ### RSA keys
 #####################################
+variable "rsa_key_path" {
+  type = string
+}
+
+variable "rsa_key_name" {
+  type = string
+}
 
 
 #####################################

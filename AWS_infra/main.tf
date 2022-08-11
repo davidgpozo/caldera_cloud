@@ -96,8 +96,8 @@ resource "aws_instance" "caldera_server" {
   vpc_security_group_ids      = [aws_security_group.sg_caldera_server.id]
   key_name                    = var.rsa_key_name
   #  user_data                   = file("files/install_caldera_server.sh")
-  depends_on = [module.aws_rsa_key]
-  private_ip = var.caldera_server_private_ip
+  depends_on                  = [module.aws_rsa_key]
+  private_ip                  = var.caldera_server_private_ip
   tags = {
     environment = var.environment
     Name        = "caldera_server"

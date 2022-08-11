@@ -29,7 +29,18 @@ module "vnet" {
 #############################################################################
 ### Gen RSA Key for EKS
 #############################################################################
+module "azure_rsa_key" {
+  source            = "./terraform_modules/azure_rsa_key"
+  az_location       = var.az_localization
+  az_resource_group = var.az_resource_group
+  rsa_key_name      = var.rsa_key_name
+#  depends_on        = [module.vnet]
+}
 
+data "azurerm_ssh_public_key" "existing_ssh" {
+  name                = module.azure_rsa_key.ssh_public_name
+  resource_group_name = var.az_resource_group
+}
 
 #############################################################################
 ### Caldera server
@@ -72,12 +83,12 @@ resource "azurerm_linux_virtual_machine" "caldera-server" {
   size                = var.az_caldera_server_size
   admin_username      = "adminuser"
   network_interface_ids = [
-    azurerm_network_interface.caldera-nic.id,
+    azurerm_network_interface.caldera-nic.id
   ]
 
   admin_ssh_key {
     username   = "adminuser"
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key =  data.azurerm_ssh_public_key.existing_ssh.public_key
   }
 
   os_disk {

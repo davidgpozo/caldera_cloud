@@ -14,8 +14,10 @@ az_subnets       = ["172.23.0.0/19", "172.23.32.0/19", "172.23.64.0/19"]
 az_subnets_names = ["subnet1", "subnet2", "subnet3"]
 
 #####################################
-### RSA keys var for EKS
+### RSA keys var
 #####################################
+rsa_key_path = "/tmp/"
+rsa_key_name = "caldera-nodes"
 
 #####################################
 ### Caldera server
