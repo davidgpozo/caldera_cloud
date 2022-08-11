@@ -111,10 +111,11 @@ jobs:
         cd ${{ env.TF_DATA_DIR }}
         export IP=$(terraform output -raw caldera_server_ip)
         echo "::set-output name=ip::$IP"
+
+
   wait-caldera-ssh:
     runs-on: ubuntu-20.04
     needs: deploy-caldera-server
-    if: inputs.cloud == 'AWS'
     steps:
     - name: Install netcat
       run: |
@@ -125,6 +126,8 @@ jobs:
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo server $SERVER_IP
         while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
+
+
   ansible-install-caldera:
     runs-on: ubuntu-20.04
     needs: [deploy-caldera-server, wait-caldera-ssh]
@@ -164,6 +167,8 @@ jobs:
         cat ${{ env.CALDERA_KEY }}
         export ANSIBLE_HOST_KEY_CHECKING=false
         ansible-playbook -i ${{ env.ANSIBLE_HOST }} install-caldera-server.yml
+
+
   wait-caldera-server:
     runs-on: ubuntu-20.04
     needs: [deploy-caldera-server,ansible-install-caldera]
@@ -173,6 +178,8 @@ jobs:
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo $SERVER_IP
         while ! curl -H "KEY:redAPIKeySantander22" http://$SERVER_IP:2288/api/v2/agents &>/dev/null; do echo "Curl Fail - `date`" && sleep 1; done
+
+
 #  deploy-caldera-hosts:
 #    runs-on: ubuntu-20.04
 #    needs: wait-caldera-server
@@ -245,6 +252,8 @@ jobs:
 #        echo "::set-output name=linux-ip::$LIP"
 #        export WIP=$(terraform output -raw windows_host_ip)
 #        echo "::set-output name=windows-ip::$WIP"
+
+
 #  wait-hosts-ssh:
 #    runs-on: ubuntu-20.04
 #    needs: [deploy-caldera-server, deploy-caldera-hosts]
@@ -277,6 +286,8 @@ jobs:
 #      run: |
 #        ssh -o StrictHostKeychecking=no -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22
 #        while ! ssh -i ${{ env.CALDERA_KEY }} ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} nc -z ${{ needs.deploy-caldera-hosts.outputs.linux-ip }} 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
+
+
 #  ansible-install-hosts:
 #    runs-on: ubuntu-20.04
 #    needs: [deploy-caldera-server, deploy-caldera-hosts, wait-hosts-ssh]
