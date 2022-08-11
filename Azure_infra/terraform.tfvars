@@ -1,10 +1,10 @@
 #####################################
 ### Enviroment
 #####################################
-az_subscription  = "P2-Real Hands-On Labs"
-az_resource_name = "1-fede5f5f-playground-sandbox"
-az_localization  = "Central US"
-environment      = "test"
+az_subscription   = "P3-Real Hands-On Labs"
+az_resource_group = "1-2f15d116-playground-sandbox"
+az_localization   = "East US"
+environment       = "test"
 
 #####################################
 ### Networking

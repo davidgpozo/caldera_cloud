@@ -1,16 +1,20 @@
 #############################################################################
-### VNET
+### Resource group
 #############################################################################
-#resource "azurerm_resource_group" "example" {
-#  name     =  var.az_resource_name
+#resource "azurerm_resource_group" "temp" {
+#  name     =  var.az_resource_group
 #  location =  var.az_localization
 #}
+
+#############################################################################
+### VNET
+#############################################################################
 
 module "vnet" {
   source              = "Azure/vnet/azurerm"
   version             = "~> 2.6.0"
-  vnet_location = var.az_localization
-  resource_group_name = var.az_resource_name
+  vnet_location       = var.az_localization
+  resource_group_name = var.az_resource_group
   address_space       = var.az_vnet_cidr
   subnet_prefixes     = var.az_subnets
   subnet_names        = var.az_subnets_names
@@ -25,80 +29,129 @@ module "vnet" {
 #############################################################################
 ### Gen RSA Key for EKS
 #############################################################################
-#module "aws_rsa_key" {
-#  source       = "./terraform_modules/aws_rsa_key"
-#  region       = var.aws_region_name
-#  rsa_key_name = var.rsa_key_name
-#  depends_on   = [module.vpc]
-#}
 
 
 #############################################################################
 ### Caldera server
 #############################################################################
-#resource "aws_security_group" "sg_caldera_server" {
-#  name        = "sg_caldera_server"
-#  description = "Allow ports for caldera server"
-#  vpc_id      = module.vpc.vpc_id
+resource "azurerm_network_security_group" "caldera-nsg" {
+  name                = "${var.az_prefix}-${var.az_caldera_name}-nsg"
+  resource_group_name = var.az_resource_group
+  location            = var.az_localization
+}
+
+resource "azurerm_public_ip" "caldera-public-ip" {
+  name                    = "caldera_pub_ip"
+  location                = var.az_localization
+  resource_group_name     = var.az_resource_group
+  allocation_method       = "Dynamic"
+  idle_timeout_in_minutes = 30
+
+  tags = {
+    environment = var.environment
+  }
+}
+
+resource "azurerm_network_interface" "caldera-nic" {
+  name                = "${var.az_prefix}-${var.az_caldera_name}-nic"
+  location            = var.az_localization
+  resource_group_name = var.az_resource_group
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = module.vnet.vnet_subnets[0]
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.caldera-public-ip.id
+  }
+}
+
+resource "azurerm_linux_virtual_machine" "caldera-server" {
+  name                = "${var.az_prefix}-${var.az_caldera_name}"
+  resource_group_name = var.az_resource_group
+  location            = var.az_localization
+  size                = var.az_caldera_server_size
+  admin_username      = "adminuser"
+  network_interface_ids = [
+    azurerm_network_interface.caldera-nic.id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-focal"
+    sku       = "20_04-lts-gen2"
+    version   = "20.04.202108250"
+  }
+}
+
+#module "virtual_machine" {
+#  source = "git::https://shefirot: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@github.com/pagonxt/terraform-azurerm-vm-linux?ref=master"
 #
-#  ingress {
-#    description = "SSH from VPC"
-#    from_port   = 22
-#    to_port     = 22
-#    protocol    = "tcp"
-#    cidr_blocks = ["0.0.0.0/0"]
-#  }
+#  # Workload Environmet variables
+#  resource_group         = var.az_resource_group
+#  resource_group_kvt_sta = var.az_resource_group
+#  resource_group_lwk     = var.az_resource_group
+#  resource_group_vault   = var.az_resource_group
+#  #End Workload Environmet variables
 #
-#  ingress {
-#    description = "Caldera server port"
-#    from_port   = 2288
-#    to_port     = 2288
-#    protocol    = "tcp"
-#    cidr_blocks = ["0.0.0.0/0"]
-#  }
+#  # Common product variables
+#  vnet_resource_group_name       = module.vnet.vnet_name
+# # resource_group_platform        = ""
+# lwk-name                       = "abc"
+#  location                       = var.az_localization
+#  #kvt-name                       = "abc"
+#  #boot_diagnostic_storageaccount = "abc"
+#  #End Common product variables
 #
-#  #  ingress {
-#  #    description = "Caldera server contact tcp port"
-#  #    from_port   = 7010
-#  #    to_port     = 7010
-#  #    protocol    = "tcp"
-#  #    cidr_blocks = ["0.0.0.0/0"]
-#  #  }
-#  #
-#  #  ingress {
-#  #    description = "Caldera server contact udp port"
-#  #    from_port   = 7011
-#  #    to_port     = 7011
-#  #    protocol    = "udp"
-#  #    cidr_blocks = ["0.0.0.0/0"]
-#  #  }
+#  #nsg variable
+#  network_interface_nsg = azurerm_network_security_group.nsg.id
+#  #vm product variables
+#  name                 = "detd1weugvml-caldera-server"
+#  vm_size              = "Standard_DS1_v2"
+#  vm_count             = 1
+#  os_disk_caching      = "ReadOnly"
+#  managed_os_disk_type = "Standard_LRS"
+#  admin_username       = "admin-terraform"
+#  zones                = ["1", "2", "3"]
+#  offset               = 1
+# # vault-name           = "abc"
+# # policy-name          = "abc"
 #
-#  egress {
-#    from_port   = 0
-#    to_port     = 0
-#    protocol    = "-1"
-#    cidr_blocks = ["0.0.0.0/0"]
-#  }
+#  add_backup              = false
+#  install_dynatrace_agent = false
 #
-#  tags = {
-#    environment = var.environment
-#  }
-#}
 #
-#resource "aws_instance" "caldera_server" {
-#  ami                         = var.caldera_server_ami
-#  instance_type               = var.caldera_server_instance_type
-#  associate_public_ip_address = true
-#  subnet_id                   = element(module.vpc.public_subnets, 0)
-#  vpc_security_group_ids      = [aws_security_group.sg_caldera_server.id]
-#  key_name                    = var.rsa_key_name
-#  #  user_data                   = file("files/install_caldera_server.sh")
-#  depends_on = [module.aws_rsa_key]
-#  private_ip = var.caldera_server_private_ip
-#  tags = {
-#    environment = var.environment
-#    Name        = "caldera_server"
-#  }
+#  #Marketplace VM vars
+#  custom_image_name    = "Ubuntu_Server_20.04_LTS"
+#  custom_image         = false
+#  gallery_image        = true
+#  #custom_image_version = "abc"
+#  #Marketplace End VM vars
+#
+#  #nic
+#  network_interface_subnets   = [module.vnet.vnet_subnets]
+#  network_interface_vnet_name = module.vnet.vnet_name
+#  network_interface_location  = var.az_localization
+#  network_interface_rsg       = var.az_resource_group
+#  static_ip                   = "true"
+#  private_ip_addresses        = [var.caldera_server_private_ip]
+#  #End nic
+#
+#  #End vm product variables
+#
+#  #Custom tags
+#  #  cost_center = ""
+#  #  confideniality = "C"
+#  #End Custom tags
 #}
 
 #############################################################################
