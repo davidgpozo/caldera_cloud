@@ -54,7 +54,6 @@ jobs:
     - name: Check out the code
       uses: actions/checkout@v3
     - name: Install python 3
-      if: inputs.cloud == 'AWS'
       uses: actions/setup-python@v3
       with:
         python-version: "3.8"
@@ -100,8 +99,6 @@ jobs:
         if [ "${{ inputs.cloud }}" = "AWS" ] ; then export TARGET="aws_instance"; fi
         if [ "${{ inputs.cloud }}" = "AZURE" ] ; then export TARGET="azurerm_linux_virtual_machine"; fi
         cd ${{ env.TF_DATA_DIR }}
-        az
-        env
         terraform plan -target=$TARGET.caldera_server  -out=deploy.tfplan
     - name: Terraform apply
       run: |
