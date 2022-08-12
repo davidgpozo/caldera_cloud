@@ -99,7 +99,6 @@ jobs:
         if [ "${{ inputs.cloud }}" = "AWS" ] ; then export TARGET="aws_instance"; fi
         if [ "${{ inputs.cloud }}" = "AZURE" ] ; then export TARGET="azurerm_linux_virtual_machine"; fi
         cd ${{ env.TF_DATA_DIR }}
-        az version
         terraform plan -target=$TARGET.caldera_server  -out=deploy.tfplan
     - name: Terraform apply
       run: |
@@ -109,7 +108,7 @@ jobs:
       run: |
         git config --global user.name ${{ github.actor }}
         git pull
-        git add -f AWS_infra/terraform.tfs* || true
+        git add -f ${{ env.TF_DATA_DIR }}/terraform.tfs* || true
         git commit -m "Autometed push terraform tfstate from ${{ github.github_event_name }}" || true
         git push
     - name: Export vars IP

@@ -2,7 +2,7 @@
 ### Enviroment
 #####################################
 az_subscription   = "Azure for Students"
-az_resource_group = "caldera-pruebas"
+az_resource_group = "pruebas-caldera"
 az_localization   = "Sweden Central"
 environment       = "test"
 
