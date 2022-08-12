@@ -2,8 +2,8 @@
 ### Resource group
 #############################################################################
 resource "azurerm_resource_group" "temp" {
-  name     =  var.az_resource_group
-  location =  var.az_localization
+  name     = var.az_resource_group
+  location = var.az_localization
 }
 
 #############################################################################
@@ -35,23 +35,23 @@ module "azure_rsa_key" {
   az_location       = var.az_localization
   az_resource_group = var.az_resource_group
   rsa_key_name      = var.rsa_key_name
-#  depends_on        = [module.vnet]
+  #  depends_on        = [module.vnet]
 }
 
 data "azurerm_ssh_public_key" "existing_ssh" {
   name                = module.azure_rsa_key.ssh_public_name
   resource_group_name = var.az_resource_group
-  depends_on = [module.azure_rsa_key]
+  depends_on          = [module.azure_rsa_key]
 }
 
 #############################################################################
 ### Caldera server
 #############################################################################
-resource "azurerm_network_security_group" "caldera-nsg" {
+resource "azurerm_network_security_group" "caldera_nsg" {
   name                = "${var.az_prefix}-${var.az_caldera_name}-nsg"
   resource_group_name = var.az_resource_group
   location            = var.az_localization
-  depends_on = [module.vnet]
+  depends_on          = [module.vnet]
 
   security_rule {
     name                       = "ssh-rule"
@@ -67,7 +67,7 @@ resource "azurerm_network_security_group" "caldera-nsg" {
 
 }
 
-resource "azurerm_public_ip" "caldera-public-ip" {
+resource "azurerm_public_ip" "caldera_public_ip" {
   name                    = "caldera_pub_ip"
   location                = var.az_localization
   resource_group_name     = var.az_resource_group
@@ -80,7 +80,7 @@ resource "azurerm_public_ip" "caldera-public-ip" {
   depends_on = [module.vnet]
 }
 
-resource "azurerm_network_interface" "caldera-nic" {
+resource "azurerm_network_interface" "caldera_nic" {
   name                = "${var.az_prefix}-${var.az_caldera_name}-nic"
   location            = var.az_localization
   resource_group_name = var.az_resource_group
@@ -89,24 +89,24 @@ resource "azurerm_network_interface" "caldera-nic" {
     name                          = "internal"
     subnet_id                     = module.vnet.vnet_subnets[0]
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.caldera-public-ip.id
+    public_ip_address_id          = azurerm_public_ip.caldera_public_ip.ip_address
   }
-  depends_on = [azurerm_public_ip.caldera-public-ip]
+  depends_on = [azurerm_public_ip.caldera_public_ip]
 }
 
-resource "azurerm_linux_virtual_machine" "caldera-server" {
+resource "azurerm_linux_virtual_machine" "caldera_server" {
   name                = "${var.az_prefix}-${var.az_caldera_name}"
   resource_group_name = var.az_resource_group
   location            = var.az_localization
   size                = var.az_caldera_server_size
   admin_username      = "ubuntu"
   network_interface_ids = [
-    azurerm_network_interface.caldera-nic.id
+    azurerm_network_interface.caldera_nic.id
   ]
 
   admin_ssh_key {
     username   = "ubuntu"
-    public_key =  data.azurerm_ssh_public_key.existing_ssh.public_key
+    public_key = data.azurerm_ssh_public_key.existing_ssh.public_key
   }
 
   os_disk {
@@ -120,9 +120,9 @@ resource "azurerm_linux_virtual_machine" "caldera-server" {
     sku       = "20_04-lts-gen2"
     version   = "20.04.202108250"
   }
-  depends_on = [azurerm_network_interface.caldera-nic,
-                data.azurerm_ssh_public_key.existing_ssh,
-                azurerm_network_security_group.caldera-nsg]
+  depends_on = [azurerm_network_interface.caldera_nic,
+    data.azurerm_ssh_public_key.existing_ssh,
+  azurerm_network_security_group.caldera_nsg]
 }
 
 #module "virtual_machine" {

@@ -3,15 +3,15 @@ output "rsa_private_key" {
 }
 
 output "caldera_server_ip" {
-  value = azurerm_linux_virtual_machine.caldera-server.public_ip_address
+  value = azurerm_linux_virtual_machine.caldera_server.public_ip_address
 }
 
 output "caldera_server_user" {
-  value = azurerm_linux_virtual_machine.caldera-server.admin_username
+  value = azurerm_linux_virtual_machine.caldera_server.admin_username
 }
 
 output "caldera_server_id" {
-  value = azurerm_linux_virtual_machine.caldera-server.id
+  value = azurerm_linux_virtual_machine.caldera_server.id
 }
 
 #output "linux_host_ip" {
