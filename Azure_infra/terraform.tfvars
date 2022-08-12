@@ -1,9 +1,9 @@
 #####################################
 ### Enviroment
 #####################################
-az_subscription   = "P3-Real Hands-On Labs"
-az_resource_group = "1-2f15d116-playground-sandbox"
-az_localization   = "East US"
+az_subscription   = "P1-Real Hands-On Labs"
+az_resource_group = "1-ef5ce3b1-playground-sandbox"
+az_localization   = "West US"
 environment       = "test"
 
 #####################################
