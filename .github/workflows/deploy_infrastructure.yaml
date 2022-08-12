@@ -97,8 +97,8 @@ jobs:
         terraform validate
     - name: Terraform plan
       run: |
-        #if [ "${{ inputs.cloud }}" = "AWS" ] ; then export TARGET="aws_instance"; fi
-        #if [ "${{ inputs.cloud }}" = "AZURE" ] ; then export TARGET="azurerm_linux_virtual_machine"; fi
+        if [ "${{ inputs.cloud }}" = "AWS" ] ; then export TARGET="aws_instance"; fi
+        if [ "${{ inputs.cloud }}" = "AZURE" ] ; then export TARGET="azurerm_linux_virtual_machine"; fi
         ls -lart
         cd ${{ env.TF_DATA_DIR }}
         pwd
