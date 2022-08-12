@@ -47,7 +47,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
 
       ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
-      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
+      TF_DATA_DIR: ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra
     outputs:
       server-ip: ${{ steps.caldera-outputs.outputs.ip }}
     steps:
