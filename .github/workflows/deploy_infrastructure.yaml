@@ -40,6 +40,10 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
+      AZURE_AD_CLIENT_ID: ${{ secrets[format('{0}_{1}_CLIENT_ID', inputs.cloud, inputs.account)] }}
+      AZURE_AD_CLIENT_SECRET: ${{ secrets[format('{0}_{1}_CLIENT_SECRET', inputs.cloud, inputs.account)] }}
+      AZURE_AD_TENANT_ID: ${{ secrets[format('{0}_{1}_TENANT_ID', inputs.cloud, inputs.account)] }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets[format('{0}_{1}_SUBSCRIPTION_ID', inputs.cloud, inputs.account)] }}
       ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
     outputs:
@@ -48,6 +52,7 @@ jobs:
     - name: Check out the code
       uses: actions/checkout@v3
     - name: Install python 3
+      if: inputs.cloud == 'AWS'
       uses: actions/setup-python@v3
       with:
         python-version: "3.8"
@@ -89,12 +94,10 @@ jobs:
         cd ${{ env.TF_DATA_DIR }}
         terraform validate
     - name: Terraform plan
-      if: inputs.cloud == 'AWS'
       run: |
         cd ${{ env.TF_DATA_DIR }}
         terraform plan -target=aws_instance.caldera_server  -out=deploy.tfplan
     - name: Terraform apply
-      if: inputs.cloud == 'AWS'
       run: |
         cd ${{ env.TF_DATA_DIR }}
         terraform apply deploy.tfplan

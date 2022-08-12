@@ -1,10 +1,10 @@
 #############################################################################
 ### Resource group
 #############################################################################
-#resource "azurerm_resource_group" "temp" {
-#  name     =  var.az_resource_group
-#  location =  var.az_localization
-#}
+resource "azurerm_resource_group" "temp" {
+  name     =  var.az_resource_group
+  location =  var.az_localization
+}
 
 #############################################################################
 ### VNET
@@ -22,6 +22,7 @@ module "vnet" {
   tags = {
     environment = var.environment
   }
+  depends_on = [azurerm_resource_group.temp]
 
 }
 

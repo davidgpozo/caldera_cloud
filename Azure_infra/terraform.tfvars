@@ -1,9 +1,9 @@
 #####################################
 ### Enviroment
 #####################################
-az_subscription   = "P1-Real Hands-On Labs"
-az_resource_group = "1-ef5ce3b1-playground-sandbox"
-az_localization   = "West US"
+az_subscription   = "Azure for Students"
+az_resource_group = "caldera-pruebas"
+az_localization   = "Sweden Central"
 environment       = "test"
 
 #####################################
