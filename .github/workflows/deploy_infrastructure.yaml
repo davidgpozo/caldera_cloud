@@ -101,9 +101,8 @@ jobs:
         if [ "${{ inputs.cloud }}" = "AZURE" ] ; then export TARGET="azurerm_linux_virtual_machine"; fi
         cd ${{ env.TF_DATA_DIR }}
         echo apuntando a $TARGET
-        env
-        pwd
-        terraform plan -target=$TARGET.caldera_server  -out=deploy.tfplan
+        terraform plan
+        #terraform plan -target=$TARGET.caldera_server -out=deploy.tfplan
     - name: Terraform apply
       run: |
         cd ${{ env.TF_DATA_DIR }}
