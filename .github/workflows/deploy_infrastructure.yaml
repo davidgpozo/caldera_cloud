@@ -22,7 +22,7 @@ on:
         default: "AWS"
         options:
         - AWS
-        - Azure
+        - AZURE
       account:
         description: 'Account where deploy'
         type: choice
@@ -38,12 +38,14 @@ jobs:
     runs-on: ubuntu-20.04
 #    if:  ${{ inputs.print_tags }}
     env:
+      ARM_CLIENT_ID: ${{ secrets[format('{0}_{1}_CLIENT', inputs.cloud, inputs.account)] }}
+      ARM_CLIENT_SECRET: ${{ secrets[format('{0}_{1}_SECRET', inputs.cloud, inputs.account)] }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets[format('{0}_{1}_SUBSCRIPTION', inputs.cloud, inputs.account)] }}
+      ARM_TENANT_ID: ${{ secrets[format('{0}_{1}_TENANT', inputs.cloud, inputs.account)] }}
+
       AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
-      AZURE_AD_CLIENT_ID: ${{ secrets[format('{0}_{1}_CLIENT_ID', inputs.cloud, inputs.account)] }}
-      AZURE_AD_CLIENT_SECRET: ${{ secrets[format('{0}_{1}_CLIENT_SECRET', inputs.cloud, inputs.account)] }}
-      AZURE_AD_TENANT_ID: ${{ secrets[format('{0}_{1}_TENANT_ID', inputs.cloud, inputs.account)] }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets[format('{0}_{1}_SUBSCRIPTION_ID', inputs.cloud, inputs.account)] }}
+
       ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
     outputs:
