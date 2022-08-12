@@ -105,6 +105,7 @@ jobs:
         cd ${{ env.TF_DATA_DIR }}
         terraform apply deploy.tfplan
     - name: Commit report
+      if: ${{ always() }}
       run: |
         git config --global user.name ${{ github.actor }}
         git pull
