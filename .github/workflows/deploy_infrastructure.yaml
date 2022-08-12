@@ -97,8 +97,8 @@ jobs:
         terraform validate
     - name: Terraform plan
       run: |
-        if [ "$cloud" = "AWS" ] ; then export TARGET="aws_instance"; fi
-        if [ "$cloud" = "AZURE" ] ; then export TARGET="azurerm_linux_virtual_machine"; fi
+        if [ "${{ inputs.cloud }}" = "AWS" ] ; then export TARGET="aws_instance"; fi
+        if [ "${{ inputs.cloud }}" = "AZURE" ] ; then export TARGET="azurerm_linux_virtual_machine"; fi
         cd ${{ env.TF_DATA_DIR }}
         terraform plan -target=$TARGET.caldera_server  -out=deploy.tfplan
     - name: Terraform apply
