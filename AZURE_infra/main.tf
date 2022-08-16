@@ -87,7 +87,7 @@ resource "azurerm_network_interface" "caldera_nic" {
   ip_configuration {
     name                          = "internal"
     subnet_id                     = module.vnet.vnet_subnets[0]
-    #private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.caldera_public_ip.id
   }
 
