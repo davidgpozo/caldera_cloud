@@ -3,7 +3,7 @@
 #####################################
 az_subscription   = "Azure for Students"
 az_resource_group = "pruebas-caldera"
-az_localization   = "Sweden Central"
+az_localization   = "Norway East"
 environment       = "test"
 
 #####################################
