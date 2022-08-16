@@ -24,60 +24,69 @@ jobs:
     runs-on: ubuntu-20.04
 #    if:  ${{ inputs.print_tags }}
     env:
+      ARM_CLIENT_ID: ${{ secrets[format('{0}_{1}_CLIENT', inputs.cloud, inputs.account)] }}
+      ARM_CLIENT_SECRET: ${{ secrets[format('{0}_{1}_SECRET', inputs.cloud, inputs.account)] }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets[format('{0}_{1}_SUBSCRIPTION', inputs.cloud, inputs.account)] }}
+      ARM_TENANT_ID: ${{ secrets[format('{0}_{1}_TENANT', inputs.cloud, inputs.account)] }}
+
       AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
+
       ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
       TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
     outputs:
       server-ip: ${{ steps.caldera-ip.outputs.ip }}
     steps:
-      - name: Check out the code
-        uses: actions/checkout@v3
-      - name: Install python 3
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.8"
-      - name: Install AWS cli
-        run: |
-          python -m pip install --upgrade pip
-          pip install awscli==1.25.26
-      - name: Install Terraform
-        env:
-              TERRAFORM_VERSION: "1.2.4"
-        run: |
-          sudo apt update
-          sudo apt install zip -y
-          tf_version=$TERRAFORM_VERSION
-          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
-          unzip terraform_"$tf_version"_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-      - name: Verify Terraform version
-        run: |
-          terraform --version
-      - name: Terraform workspace
-        run: |
-          terraform workspace new ${{ env.ENVIRONMENT }} || terraform workspace select ${{ env.ENVIRONMENT }}
-      - name: Terraform init
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform init -input=false
-      - name: Terraform validation
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform validate
-      - name: Terraform plan destroy
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform plan -out=deploy.tfplan -destroy
-      - name: Terraform destroy
-        run: |
-          cd ${{ env.TF_DATA_DIR }}
-          terraform apply deploy.tfplan
-      - name: Commit report
-        run: |
-          git config --global user.name 'shefirot'
-          git config --global user.email 'davidgpozo@gmail.com'
-          git pull
-          git add -f AWS_infra/terraform.tfs* || true
-          git commit -m "Autometed push terraform tfstate" || true
-          git push
+    - name: Check out the code
+      uses: actions/checkout@v3
+    - name: Install python 3
+      if: inputs.cloud == 'AWS'
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.8"
+    - name: Install AWS cli
+      if: inputs.cloud == 'AWS'
+      run: |
+        python -m pip install --upgrade pip
+        pip install awscli==1.25.26
+    - name: Install Terraform
+      env:
+            TERRAFORM_VERSION: "1.2.4"
+      run: |
+        sudo apt update
+        sudo apt install zip -y
+        tf_version=$TERRAFORM_VERSION
+        wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+        unzip terraform_"$tf_version"_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+    - name: Verify Terraform version
+      run: |
+        terraform --version
+    - name: Terraform workspace
+      run: |
+        terraform workspace new ${{ env.ENVIRONMENT }} || terraform workspace select ${{ env.ENVIRONMENT }}
+    - name: Terraform init
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform init -input=false
+    - name: Terraform validation
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform validate
+    - name: Terraform plan destroy
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform plan -out=deploy.tfplan -destroy
+    - name: Terraform destroy
+      run: |
+        cd ${{ env.TF_DATA_DIR }}
+        terraform apply deploy.tfplan
+    - name: Commit report
+      if: ${{ always() }}
+      run: |
+        git config --global user.name 'shefirot'
+        git config --global user.email 'davidgpozo@gmail.com'
+        git pull
+        git add -f AWS_infra/terraform.tfs* || true
+        git commit -m "Autometed push terraform tfstate" || true
+        git push
