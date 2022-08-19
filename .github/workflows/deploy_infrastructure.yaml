@@ -159,7 +159,7 @@ jobs:
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
-        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
+        cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
         chmod 600 ${{ env.CALDERA_KEY }}
         cat ${{ env.CALDERA_KEY }}
     - name: Caldera server trust on runner
