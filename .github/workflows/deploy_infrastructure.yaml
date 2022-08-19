@@ -161,7 +161,7 @@ jobs:
         echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
         cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
         chmod 600 ${{ env.CALDERA_KEY }}
-        ssh -i ${{ env.CALDERA_KEY }} ubuntu@$SERVER_IP uname -a
+        ssh -i ${{ env.CALDERA_KEY }} ubuntu@20.100.172.79 uname -a
     - name: Caldera server trust on runner
       run: |
         mkdir -p ~/.ssh
