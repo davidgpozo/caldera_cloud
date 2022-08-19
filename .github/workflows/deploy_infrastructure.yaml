@@ -193,8 +193,14 @@ jobs:
     runs-on: ubuntu-20.04
     needs: wait-caldera-server
     env:
+      ARM_CLIENT_ID: ${{ secrets[format('{0}_{1}_CLIENT', inputs.cloud, inputs.account)] }}
+      ARM_CLIENT_SECRET: ${{ secrets[format('{0}_{1}_SECRET', inputs.cloud, inputs.account)] }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets[format('{0}_{1}_SUBSCRIPTION', inputs.cloud, inputs.account)] }}
+      ARM_TENANT_ID: ${{ secrets[format('{0}_{1}_TENANT', inputs.cloud, inputs.account)] }}
+
       AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
+
       ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
       TF_DATA_DIR: ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra
     outputs:
@@ -269,6 +275,7 @@ jobs:
       ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
       ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
       CALDERA_KEY: ${{ github.WORKSPACE }}/sha
+      ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
       GITHUB_DIR_FILES: ${{ github.WORKSPACE }}/.github/files
     steps:
     - name: Check out the code
