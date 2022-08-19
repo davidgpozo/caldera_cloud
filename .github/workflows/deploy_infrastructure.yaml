@@ -133,7 +133,7 @@ jobs:
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
         echo server $SERVER_IP
         # Exit if IP variable is empty
-        [[ -z "$SERVER_IP" ]] && echo "ERROR: Missing IP" && exit 1
+        [[ -z "$SERVER_I" ]] && echo "ERROR: Missing IP" && exit 1
         while ! nc -z $SERVER_IP 22 &>/dev/null; do echo "Waiting ssh connection - `date`" && sleep 1; done
 
 
