@@ -124,9 +124,9 @@ resource "azurerm_linux_virtual_machine" "caldera_server" {
 
   source_image_reference {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts-gen2"
-    version   = "20.04.202108250"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
+    version   = "22.04.202206160"
   }
   depends_on = [azurerm_network_interface.caldera_nic,
     data.azurerm_ssh_public_key.existing_ssh,
