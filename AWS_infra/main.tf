@@ -139,7 +139,7 @@ resource "aws_instance" "linux_host" {
   subnet_id              = element(module.vpc.private_subnets, 1)
   vpc_security_group_ids = [aws_security_group.sg_caldera_linux.id]
   key_name               = var.rsa_key_name
-  user_data              = file("files/install_linux_host.sh")
+#  user_data              = file("files/install_linux_host.sh")
   depends_on = [module.aws_rsa_key, aws_instance.caldera_server, aws_instance.caldera_server]
   private_ip = var.linux_host_private_ip
 
