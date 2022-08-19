@@ -93,6 +93,7 @@ resource "azurerm_network_interface" "caldera_nic" {
   ip_configuration {
     name                          = "public"
     private_ip_address_allocation = "Static"
+    subnet_id                     = module.vnet.vnet_subnets[0]
     public_ip_address_id          = azurerm_public_ip.caldera_public_ip.id
     primary = true
   }
