@@ -197,7 +197,7 @@ jobs:
 #      AWS_ACCESS_KEY_ID: ${{ secrets[format('{0}_{1}_ID', inputs.cloud, inputs.account)] }}
 #      AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
 #      ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
-#      TF_DATA_DIR: ${{ github.WORKSPACE }}/AWS_infra
+#      TF_DATA_DIR: ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra
 #    outputs:
 #      linux-ip: ${{ steps.host-vars.outputs.linux-ip }}
 #      windows-ip: ${{ steps.host-vars.outputs.windows-ip }}
@@ -285,7 +285,7 @@ jobs:
 #    - name: Generate enviroment files
 #      run: |
 #        echo ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} > ${{ env.ANSIBLE_HOST }}
-#        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
+#        cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
 #        chmod 600 ${{ env.CALDERA_KEY }}
 #    - name: Install netcat on caldera server
 #      run: |
@@ -321,7 +321,7 @@ jobs:
 #      run: |
 #        cat ${{ env.ORG_HOST_FILE }} | sed s+LINUX-IP+${{ needs.deploy-caldera-hosts.outputs.linux-ip }}+g | sed s+CALDERA-IP+${{ needs.deploy-caldera-server.outputs.server-ip }}+g > ${{ env.ANSIBLE_HOST }}
 #        cat ${{ env.ANSIBLE_HOST }}
-#        cat ${{ github.WORKSPACE }}/AWS_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
+#        cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
 #        chmod 600 ${{ env.CALDERA_KEY }}
 #        echo La key de las narices
 #        cat ${{ env.CALDERA_KEY }}
