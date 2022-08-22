@@ -25,8 +25,9 @@
     headers:
       file: sandcat.go
       platform: linux
-  retries: 0
-  delay: 5
+  register: get_pkg
+  until: get_pkg | succeeded
+  with_items: pkg_list
 
 - name: Recursively change ownership of caldera directory
   become: yes
