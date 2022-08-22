@@ -21,14 +21,14 @@
 
 - name: git clone caldera
   become: yes
-  retries: 5
-  delay: 5
   ansible.builtin.git:
     repo: 'https://github.com/mitre/caldera.git'
     dest: "{{ caldera_rootdir }}"
     version: "{{ caldera_version }}"
     update: false
     recursive: true
+  register: gh_clone
+  until: gh_clone.result is success
 
 - name: Recursively change ownership of caldera directory
   ansible.builtin.file:
@@ -40,12 +40,12 @@
 
 - name: Install caldera pip requirements
   become: yes
-  retries: 5
-  delay: 5
   pip:
     requirements: "{{ caldera_rootdir }}/requirements.txt"
   register: pkg_result
   until: pkg_result is success
+  register: pip_install
+  until: pip_install.result is success
 
 - name: Generate caldera config file
   become: yes
