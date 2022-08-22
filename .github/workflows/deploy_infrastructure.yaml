@@ -333,12 +333,15 @@ jobs:
     - name: Caldera server trust on runner
       run: |
         cp ${{ env.CALDERA_KEY }} ${{ env.CALDERA_KEY }}_bck
+        ls -lah  ${{ github.WORKSPACE }}
+
         mkdir -p ~/.ssh
         ssh-keygen -p -N "" -f ${{ env.CALDERA_KEY }}
         cp ${{ env.CALDERA_KEY }} ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keygen -y -f ${{ env.CALDERA_KEY }} > ~/.ssh/id_rsa.pub
         chmod 644 ~/.ssh/id_rsa.pub
+        ssh -i ${{ env.CALDERA_KEY }}_bck -o StrictHostKeychecking=no ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} ssh -o StrictHostKeychecking=no -i /tmp/rsa ubuntu@${{ needs.deploy-caldera-hosts.outputs.linux-ip }} ip a || true
     - name: Install Caldera hosts
       run: |
         echo la rsa
@@ -349,7 +352,7 @@ jobs:
         cd ${{ env.ANSIBLE_DATA_DIR }}
         cat ${{ env.CALDERA_KEY }}
         export ANSIBLE_HOST_KEY_CHECKING=false
-        ssh -i ${{ env.CALDERA_KEY }}_bck -o StrictHostKeychecking=no ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} ssh -o StrictHostKeychecking=no -i /tmp/rsa ubuntu@${{ needs.deploy-caldera-hosts.outputs.linux-ip }} ip a
+#        ssh -i ${{ env.CALDERA_KEY }}_bck -o StrictHostKeychecking=no ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} ssh -o StrictHostKeychecking=no -i /tmp/rsa ubuntu@${{ needs.deploy-caldera-hosts.outputs.linux-ip }} ip a
         ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }}_bck install-linux-caldera-agent.yml
     - name: Deploy Linux host
       run: |
