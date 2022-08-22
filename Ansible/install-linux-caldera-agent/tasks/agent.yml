@@ -26,7 +26,7 @@
       file: sandcat.go
       platform: linux
   register: get_pkg
-  until: get_pkg | succeeded
+  until: get_pkg is success
   with_items: pkg_list
 
 - name: Recursively change ownership of caldera directory
