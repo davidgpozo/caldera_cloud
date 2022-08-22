@@ -352,12 +352,3 @@ jobs:
         export ANSIBLE_HOST_KEY_CHECKING=false
         ssh -i ${{ env.CALDERA_KEY }}_bck -o StrictHostKeychecking=no ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} ssh -o StrictHostKeychecking=no -i /tmp/rsa ubuntu@${{ needs.deploy-caldera-hosts.outputs.linux-ip }} ip a || true
         ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }}_bck install-linux-caldera-agent.yml
-    - name: Deploy Linux host
-      run: |
-        ssh -i ${{ env.CALDERA_KEY }} ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
-        ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ip a
-        ssh ${{ needs.deploy-caldera-server.outputs.server-ip }} ping -c 1 ${{ needs.deploy-caldera-hosts.outputs.linux-ip }}
-
-        cd ${{ env.ANSIBLE_DATA_DIR }}
-        export ANSIBLE_HOST_KEY_CHECKING=false
-        ansible-playbook -i ${{ env.ANSIBLE_HOST }} --private-key ${{ env.CALDERA_KEY }} install-linux-caldera-agent.yml
