@@ -42,8 +42,6 @@
   become: yes
   pip:
     requirements: "{{ caldera_rootdir }}/requirements.txt"
-  register: pkg_result
-  until: pkg_result is success
   register: pip_install
   until: pip_install.result is success
 
