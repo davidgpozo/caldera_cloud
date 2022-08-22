@@ -1,6 +1,8 @@
 ---
 - name: Ensure caldera dependencies are present
   become: yes
+  retries: 5
+  delay: 5
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
@@ -19,6 +21,8 @@
 
 - name: git clone caldera
   become: yes
+  retries: 5
+  delay: 5
   ansible.builtin.git:
     repo: 'https://github.com/mitre/caldera.git'
     dest: "{{ caldera_rootdir }}"
@@ -36,6 +40,8 @@
 
 - name: Install caldera pip requirements
   become: yes
+  retries: 5
+  delay: 5
   pip:
     requirements: "{{ caldera_rootdir }}/requirements.txt"
   register: pkg_result

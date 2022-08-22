@@ -1,6 +1,8 @@
 ---
 - name: Ensure dependencies are present
   become: yes
+  retries: 5
+  delay: 5
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
@@ -19,6 +21,8 @@
 
 - name: Get agent package
   become: yes
+  retries: 5
+  delay: 5
   ansible.builtin.get_url:
     url: "{{ caldera_server }}/file/download"
     dest: "{{ caldera_home }}/agent.go"
