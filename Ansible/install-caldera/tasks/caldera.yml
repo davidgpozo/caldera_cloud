@@ -1,8 +1,6 @@
 ---
 - name: Ensure caldera dependencies are present
   become: yes
-  retries: 5
-  delay: 5
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
@@ -27,8 +25,8 @@
     version: "{{ caldera_version }}"
     update: false
     recursive: true
-  register: gh_clone
-  until: gh_clone.result is success
+  retries: 0
+  delay: 5
 
 - name: Recursively change ownership of caldera directory
   ansible.builtin.file:
@@ -42,8 +40,8 @@
   become: yes
   pip:
     requirements: "{{ caldera_rootdir }}/requirements.txt"
-  register: pip_install
-  until: pip_install.result is success
+  register: pkg_result
+  until: pkg_result is success
 
 - name: Generate caldera config file
   become: yes
