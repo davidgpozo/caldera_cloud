@@ -341,7 +341,7 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keygen -y -f ${{ env.CALDERA_KEY }} > ~/.ssh/id_rsa.pub
         chmod 644 ~/.ssh/id_rsa.pub
-        ssh -i ${{ env.CALDERA_KEY }}_bck -o StrictHostKeychecking=no ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} ssh -o StrictHostKeychecking=no -i /tmp/rsa ubuntu@${{ needs.deploy-caldera-hosts.outputs.linux-ip }} ip a 
+#        ssh -i ${{ env.CALDERA_KEY }}_bck -o StrictHostKeychecking=no ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} ssh -o StrictHostKeychecking=no -i /tmp/rsa ubuntu@${{ needs.deploy-caldera-hosts.outputs.linux-ip }} ip a
     - name: Install Caldera hosts
       run: |
         echo la rsa
