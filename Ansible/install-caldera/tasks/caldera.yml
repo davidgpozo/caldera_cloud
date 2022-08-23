@@ -8,6 +8,8 @@
   with_items: "{{ caldera_pkg }}"
   register: pkg_result
   until: pkg_result is success
+  retries: 10
+  delay: 5
 
 - name: ensure caldera user exists
   become: yes
@@ -25,7 +27,10 @@
     version: "{{ caldera_version }}"
     update: false
     recursive: true
-  retries: 0
+  with_items: pkg_list
+  register: get_pkg
+  until: get_pkg is success
+  retries: 10
   delay: 5
 
 - name: Recursively change ownership of caldera directory
@@ -42,6 +47,8 @@
     requirements: "{{ caldera_rootdir }}/requirements.txt"
   register: pkg_result
   until: pkg_result is success
+  retries: 10
+  delay: 5
 
 - name: Generate caldera config file
   become: yes
