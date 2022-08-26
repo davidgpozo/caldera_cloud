@@ -10,20 +10,20 @@
 ### VNET
 #############################################################################
 
-module "vnet" {
-  source              = "Azure/vnet/azurerm"
-  version             = "~> 2.6.0"
-  vnet_location       = var.az_localization
-  resource_group_name = var.az_resource_group
-  address_space       = var.az_vnet_cidr
-  subnet_prefixes     = var.az_subnets
-  subnet_names        = var.az_subnets_names
-
-  tags = {
-    environment = var.environment
-  }
-
-}
+#module "vnet" {
+#  source              = "Azure/vnet/azurerm"
+#  version             = "~> 2.6.0"
+#  vnet_location       = var.az_localization
+#  resource_group_name = var.az_resource_group
+#  address_space       = var.az_vnet_cidr
+#  subnet_prefixes     = var.az_subnets
+#  subnet_names        = var.az_subnets_names
+#
+#  tags = {
+#    environment = var.environment
+#  }
+#
+#}
 
 
 #############################################################################
@@ -50,7 +50,7 @@ resource "azurerm_network_security_group" "caldera_nsg" {
   name                = "${var.az_prefix}-${var.az_caldera_name}-nsg"
   resource_group_name = var.az_resource_group
   location            = var.az_localization
-  depends_on          = [module.vnet]
+#  depends_on          = [module.vnet]
 
   security_rule {
     name                       = "ssh-rule"
@@ -76,7 +76,7 @@ resource "azurerm_public_ip" "caldera_public_ip" {
   tags = {
     environment = var.environment
   }
-  depends_on = [module.vnet]
+  #depends_on = [module.vnet]
 }
 
 resource "azurerm_network_interface" "caldera_nic" {
@@ -86,7 +86,8 @@ resource "azurerm_network_interface" "caldera_nic" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = module.vnet.vnet_subnets[0]
+    #subnet_id                     = module.vnet.vnet_subnets[0]
+    subnet_id                     = "cca5e7d6-4cf6-4245-aa72-ef2137c3d290"
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.caldera_public_ip.id
   }
@@ -133,66 +134,66 @@ resource "azurerm_linux_virtual_machine" "caldera_server" {
   azurerm_network_security_group.caldera_nsg]
 }
 
-#module "virtual_machine" {
-#  source = "git::https://shefirot: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@github.com/pagonxt/terraform-azurerm-vm-linux?ref=master"
-#
-#  # Workload Environmet variables
-#  resource_group         = var.az_resource_group
-#  resource_group_kvt_sta = var.az_resource_group
-#  resource_group_lwk     = var.az_resource_group
-#  resource_group_vault   = var.az_resource_group
-#  #End Workload Environmet variables
-#
-#  # Common product variables
-#  vnet_resource_group_name       = module.vnet.vnet_name
-# # resource_group_platform        = ""
-# lwk-name                       = "abc"
-#  location                       = var.az_localization
-#  #kvt-name                       = "abc"
-#  #boot_diagnostic_storageaccount = "abc"
-#  #End Common product variables
-#
-#  #nsg variable
-#  network_interface_nsg = azurerm_network_security_group.nsg.id
-#  #vm product variables
-#  name                 = "detd1weugvml-caldera-server"
-#  vm_size              = "Standard_DS1_v2"
-#  vm_count             = 1
-#  os_disk_caching      = "ReadOnly"
-#  managed_os_disk_type = "Standard_LRS"
-#  admin_username       = "admin-terraform"
-#  zones                = ["1", "2", "3"]
-#  offset               = 1
-# # vault-name           = "abc"
-# # policy-name          = "abc"
-#
-#  add_backup              = false
-#  install_dynatrace_agent = false
-#
-#
-#  #Marketplace VM vars
-#  custom_image_name    = "Ubuntu_Server_20.04_LTS"
-#  custom_image         = false
-#  gallery_image        = true
-#  #custom_image_version = "abc"
-#  #Marketplace End VM vars
-#
-#  #nic
-#  network_interface_subnets   = [module.vnet.vnet_subnets]
-#  network_interface_vnet_name = module.vnet.vnet_name
-#  network_interface_location  = var.az_localization
-#  network_interface_rsg       = var.az_resource_group
-#  static_ip                   = "true"
-#  private_ip_addresses        = [var.caldera_server_private_ip]
-#  #End nic
-#
-#  #End vm product variables
-#
-#  #Custom tags
-#  #  cost_center = ""
-#  #  confideniality = "C"
-#  #End Custom tags
-#}
+module "virtual_machine" {
+  source = "git::https://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@github.com/pagonxt/terraform-azurerm-vm-linux?ref=master"
+
+  # Workload Environmet variables
+  resource_group         = var.az_resource_group
+  resource_group_kvt_sta = var.az_resource_group
+  resource_group_lwk     = var.az_resource_group
+  resource_group_vault   = var.az_resource_group
+  #End Workload Environmet variables
+
+  # Common product variables
+  vnet_resource_group_name       = module.vnet.vnet_name
+ # resource_group_platform        = ""
+ lwk-name                       = "abc"
+  location                       = var.az_localization
+  #kvt-name                       = "abc"
+  #boot_diagnostic_storageaccount = "abc"
+  #End Common product variables
+
+  #nsg variable
+  network_interface_nsg = azurerm_network_security_group.nsg.id
+  #vm product variables
+  name                 = "detd1weugvml-caldera-server"
+  vm_size              = "Standard_DS1_v2"
+  vm_count             = 1
+  os_disk_caching      = "ReadOnly"
+  managed_os_disk_type = "Standard_LRS"
+  admin_username       = "admin-terraform"
+  zones                = ["1", "2", "3"]
+  offset               = 1
+ # vault-name           = "abc"
+ # policy-name          = "abc"
+
+  add_backup              = false
+  install_dynatrace_agent = false
+
+
+  #Marketplace VM vars
+  custom_image_name    = "Ubuntu_Server_20.04_LTS"
+  custom_image         = false
+  gallery_image        = true
+  #custom_image_version = "abc"
+  #Marketplace End VM vars
+
+  #nic
+  network_interface_subnets   = [module.vnet.vnet_subnets]
+  network_interface_vnet_name = module.vnet.vnet_name
+  network_interface_location  = var.az_localization
+  network_interface_rsg       = var.az_resource_group
+  static_ip                   = "true"
+  private_ip_addresses        = [var.caldera_server_private_ip]
+  #End nic
+
+  #End vm product variables
+
+  #Custom tags
+  #  cost_center = ""
+  #  confideniality = "C"
+  #End Custom tags
+}
 
 #############################################################################
 ### Linux host

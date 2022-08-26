@@ -27,10 +27,11 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets[format('{0}_{1}_KEY', inputs.cloud, inputs.account)] }}
 #      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
-#    - name: Install AZ cli
-#      run: |
-#       # curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-#        az version
+    - name: Install Packer
+      run: |
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+        sudo apt-get update && sudo apt-get install packer -y
 #    - name: 'Az CLI login'
 #      uses: azure/login@ec3c14589bd3e9312b3cc8c41e6860e258df9010
 #      with:

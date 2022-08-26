@@ -1,0 +1,42 @@
+name: Gen image Packer
+on:
+  workflow_dispatch:
+    inputs:
+      cloud:
+        description: 'Cloud to deploy against'
+        type: choice
+        required: true
+        default: "AWS"
+        options:
+        - AWS
+        - Azure
+      account:
+        description: 'Account where deploy'
+        type: choice
+        required: true
+        default: "ASM"
+        options:
+        - ASM
+        - ACD
+
+jobs:
+  deploy-caldera-server:
+    runs-on: ubuntu-20.04
+    env:
+      ARM_CLIENT_ID: ${{ secrets[format('{0}_{1}_CLIENT', inputs.cloud, inputs.account)] }}
+      ARM_CLIENT_SECRET: ${{ secrets[format('{0}_{1}_SECRET', inputs.cloud, inputs.account)] }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets[format('{0}_{1}_SUBSCRIPTION', inputs.cloud, inputs.account)] }}
+      ARM_TENANT_ID: ${{ secrets[format('{0}_{1}_TENANT', inputs.cloud, inputs.account)] }}
+
+      FILE: "ubuntu_22_04_lts.json"
+    steps:
+    - name: Install Packer
+      run: |
+        curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+        sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+        sudo apt-get update && sudo apt-get install packer -y
+        packer version
+    - name: Generate image with packer
+      run: |
+        packer validate ${{ env.FILE }}
+        packer build ${{ env.FILE }}
