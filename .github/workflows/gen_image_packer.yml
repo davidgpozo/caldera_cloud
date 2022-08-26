@@ -31,6 +31,8 @@ jobs:
       FILE: "ubuntu_22_04_lts.json"
       PCK_DATA_DIR: ${{ github.WORKSPACE }}/Packer
     steps:
+    - name: Check out the code
+      uses: actions/checkout@v3
     - name: Install Packer
       run: |
         curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
