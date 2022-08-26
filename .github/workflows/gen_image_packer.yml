@@ -39,6 +39,8 @@ jobs:
         packer version
     - name: Generate image with packer
       run: |
+        ls -lah
         cd ${{ env.PCK_DATA_DIR }}
+        ls -lah
         packer validate ${{ env.FILE }}
         packer build ${{ env.FILE }}
