@@ -40,6 +40,7 @@ jobs:
         ls -la
     - name: Generate image with packer
       run: |
+        cd ${{ github.WORKSPACE }}
         ls -lah
         cd ${{ env.PCK_DATA_DIR }}
         ls -lah
