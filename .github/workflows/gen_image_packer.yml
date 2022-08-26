@@ -20,7 +20,7 @@ on:
         - ACD
 
 jobs:
-  deploy-caldera-server:
+  deploy-image-with-packer:
     runs-on: ubuntu-20.04
     env:
       ARM_CLIENT_ID: ${{ secrets[format('{0}_{1}_CLIENT', inputs.cloud, inputs.account)] }}
@@ -40,6 +40,7 @@ jobs:
         ls -la
     - name: Generate image with packer
       run: |
+        cd .. && ls -lah
         cd ${{ github.WORKSPACE }}
         ls -lah
         cd ${{ env.PCK_DATA_DIR }}
