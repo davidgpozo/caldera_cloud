@@ -1,12 +1,10 @@
 #### Static Application Security Testing
 
-[![Semgrep](https://github.com/shefirot/caldera_cloud/actions/workflows/semgrep.yml/badge.svg?branch=main)](https://github.com/shefirot/caldera_cloud/actions/workflows/semgrep.yml)
-
+[![Semgrep](https://github.com/shefirot/caldera_cloud/actions/workflows/semgrep.yml/badge.svg)](https://github.com/shefirot/caldera_cloud/actions/workflows/semgrep.yml)
 #### Last actions state
-[![Semgrep](https://github.com/shefirot/caldera_cloud/actions/workflows/deploy_infrastructure.yaml/badge.svg?branch=main)](https://github.com/shefirot/caldera_cloud/actions/workflows/deploy_infrastructure.yaml)
-[![Semgrep](https://github.com/shefirot/caldera_cloud/actions/workflows/destroy_infrastructure.yaml/badge.svg?branch=main)](https://github.com/shefirot/caldera_cloud/actions/workflows/destroy_infrastructure.yaml)
-[![Semgrep](https://github.com/shefirot/caldera_cloud/actions/workflows/gen_image_packer.yml/badge.svg?branch=main)](https://github.com/shefirot/caldera_cloud/actions/workflows/gen_image_packer.yml)
-
+[![Deploy infrastructure](https://github.com/shefirot/caldera_cloud/actions/workflows/deploy_infrastructure.yaml/badge.svg)](https://github.com/shefirot/caldera_cloud/actions/workflows/deploy_infrastructure.yaml)
+[![Destroy infrastructure](https://github.com/shefirot/caldera_cloud/actions/workflows/destroy_infrastructure.yaml/badge.svg)](https://github.com/shefirot/caldera_cloud/actions/workflows/destroy_infrastructure.yaml)
+[![Gen image Packer](https://github.com/shefirot/caldera_cloud/actions/workflows/gen_image_packer.yml/badge.svg)](https://github.com/shefirot/caldera_cloud/actions/workflows/gen_image_packer.yml)
 #### Table of contents
 
 [About The Repository](#about-the-repository)<br>
