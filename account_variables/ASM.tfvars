@@ -49,7 +49,7 @@ linux_host_instance_type = "t2.small"
 #####################################
 ### Windows host
 #####################################
-windows_host_ami           = "ami-0193dcf9aa4f5654e"
+windows_host_ami           = "ami-0f1ee03d06c4c659c"
 windows_host_instance_type = "t3.medium"
 
 
