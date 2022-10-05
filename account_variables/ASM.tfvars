@@ -3,6 +3,8 @@
 ### Common vars
 ###
 #####################################
+environment = "caldera-test"
+
 #####################################
 ### RSA keys var for EKS
 #####################################
@@ -20,8 +22,6 @@ rsa_key_name = "caldera-nodes"
 aws_region_name = "us-east-1"
 
 aws_zones_names = ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1f"]
-
-environment = "caldera-test"
 
 #####################################
 ### Networking
@@ -67,7 +67,6 @@ windows_host_instance_type = "t3.medium"
 az_subscription   = "Azure for Students"
 az_resource_group = "pruebas-caldera"
 az_localization   = "Norway East"
-environment       = "test"
 
 #####################################
 ### Networking
