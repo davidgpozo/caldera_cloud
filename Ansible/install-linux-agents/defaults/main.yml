@@ -1,0 +1,3 @@
+---
+agent_root_dir: /tmp
+qualys_agent_name: qualys_debian.tar.gz

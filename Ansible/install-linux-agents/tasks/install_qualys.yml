@@ -1,0 +1,33 @@
+---
+- name: Copy Qualys tar.gz
+  ansible.builtin.copy:
+    src: "{{ agent_root_dir }}/{{ qualys_agent_name }}"
+    dest: "/tmp/{{ qualys_agent_name }}"
+    mode: '0600'
+    remote_src: no
+
+- name: Get and extract qualys agent tar.gz into /tmp/
+  ansible.builtin.unarchive:
+    src:  "/tmp/{{ qualys_agent_name }}"
+    dest: /tmp
+    remote_src: yes
+    list_files: yes
+  register: unarchived_list
+
+- name: Print packeges will be installed
+  debug:
+    msg: "Packages to install {{ unarchived_list.files | select('match', 'QualysCloudAgent_x64') | list }}"
+
+- name: Install Qualys package
+  become: yes
+  ansible.builtin.apt:
+    deb: "/tmp/{{ item }}"
+  with_items: "{{ unarchived_list.files | select('match', 'QualysCloudAgent_x64') | list }}"
+
+- name: Start Qualys agent
+  become: yes
+  ansible.builtin.command: /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh {{ qualys_license }}
+  register: register_qualys
+  until: register_qualys is success
+  retries: 10
+  delay: 10

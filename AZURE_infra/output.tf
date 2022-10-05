@@ -1,31 +1,37 @@
+#############################################################################
+### Common outputs
+#############################################################################
 output "rsa_private_key" {
+  description = "Private key to access nodes"
   value = nonsensitive(module.azure_rsa_key.private_rsa_key)
 }
 
+output "authorized_keys" {
+  description = "Authorized key to add nodes"
+  value = data.azurerm_ssh_public_key.existing_ssh.public_key
+}
+
+#############################################################################
+### Caldera server outputs
+#############################################################################
+output "caldera_server_public_ip_id" {
+  description = "Public caldera IP id to associate public ip to nic"
+  value = azurerm_public_ip.caldera_public_ip.id
+}
+
 output "caldera_server_ip" {
-  value = azurerm_linux_virtual_machine.caldera_server.public_ip_address
+  description = "Caldera server IP to access"
+  value = azurerm_public_ip.caldera_public_ip.ip_address 
 }
 
-output "caldera_server_user" {
-  value = azurerm_linux_virtual_machine.caldera_server.admin_username
+output "caldera_server_int_ip" {
+  description = "Internal caldera server IP"
+  value = azurerm_linux_virtual_machine.caldera_server.private_ip_address
 }
-
-output "caldera_server_id" {
-  value = azurerm_linux_virtual_machine.caldera_server.id
+#############################################################################
+### Linux host outputs
+#############################################################################
+output "linux_host_ip" {
+  description = "Internal linux host address"
+  value = azurerm_linux_virtual_machine.linux_host.private_ip_address
 }
-
-#output "linux_host_ip" {
-#  value = aws_instance.linux_host.private_ip
-#}
-#
-#output "linux_host_id" {
-#  value = aws_instance.linux_host.id
-#}
-#
-#output "windows_host_ip" {
-#  value = aws_instance.windows_host.private_ip
-#}
-#
-#output "windows_host_id" {
-#  value = aws_instance.windows_host.id
-#}

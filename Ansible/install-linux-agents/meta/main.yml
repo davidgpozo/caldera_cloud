@@ -1,0 +1,7 @@
+---
+allow_duplicates: true
+dependencies: []
+
+galaxy_info:
+  author: shefirot
+  description: An Ansible role for installing and configuring required agents for Linux hosts

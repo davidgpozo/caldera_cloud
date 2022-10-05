@@ -100,7 +100,7 @@ resource "aws_instance" "caldera_server" {
   private_ip                  = var.caldera_server_private_ip
   tags = {
     environment = var.environment
-    Name        = "caldera_server"
+    Name        = var.caldera_name
   }
 }
 
@@ -145,7 +145,7 @@ resource "aws_instance" "linux_host" {
 
   tags = {
     environment = var.environment
-    Name        = "linux_host"
+    Name        = var.linux_host_name
   }
 }
 
@@ -189,6 +189,6 @@ resource "aws_instance" "windows_host" {
   private_ip             = var.windows_host_private_ip
   tags = {
     environment = var.environment
-    Name        = "windows_host"
+    Name        = var.windows_host_name
   }
 }

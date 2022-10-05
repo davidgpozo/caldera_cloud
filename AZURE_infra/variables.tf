@@ -39,7 +39,7 @@ variable "az_subnets_names" {
 variable "az_prefix" {
   description = "Prefix for az resources names"
   type        = string
-  default     = "detd1weugvml"
+  default     = "redteam"
 }
 
 #####################################
@@ -77,6 +77,23 @@ variable "az_caldera_server_size" {
 #####################################
 ### Linux host
 #####################################
+variable "az_linux_host_name" {
+  description = "Name for linux host VM"
+  type        = string
+  default     = "linux_host"
+}
+
+variable "az_linux_host_private_ip" {
+  description = "Private IP for linux host"
+  type        = string
+  default     = "10.0.0.246"
+}
+
+variable "az_linux_host_size" {
+  description = "The size of the VM for linux host"
+  type        = string
+  default     = "Standard_DS1_v2"
+}
 
 
 #####################################

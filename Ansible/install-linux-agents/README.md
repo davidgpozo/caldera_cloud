@@ -1,6 +1,6 @@
 # install-ansible
 
-An Ansible role for installing and configuring a Linux Caldera agent for Mitre Caldera server
+An Ansible role for installing and configuring required agents for Linux hosts
 
 ## OS Platforms
 
@@ -15,5 +15,5 @@ To use this role in your playbook, add the code below:
 ```
 - role: ansible-caldera
     vars:
-      dir: '{{ node_app_dir }}/install-linux-caldera-agent/'
+      dir: '{{ node_app_dir }}/install-linux-agents/'
 ```

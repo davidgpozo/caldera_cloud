@@ -62,6 +62,12 @@ variable "rsa_key_name" {
 #####################################
 ### Caldera server
 #####################################
+variable "caldera_name" {
+  description = "Name for caldera server VM"
+  type        = string
+  default     = "caldera_server"
+}
+
 variable "caldera_server_ami" {
   description = "AMI for caldera server"
   type        = string
@@ -83,6 +89,12 @@ variable "caldera_server_private_ip" {
 #####################################
 ### Linux host
 #####################################
+variable "linux_host_name" {
+  description = "Name for caldera server VM"
+  type        = string
+  default     = "linux_host"
+}
+
 variable "linux_host_ami" {
   description = "AMI for Linux host"
   type        = string
@@ -104,6 +116,12 @@ variable "linux_host_private_ip" {
 #####################################
 ### Windows host
 #####################################
+variable "windows_host_name" {
+  description = "Name for caldera server VM"
+  type        = string
+  default     = "windows_host"
+}
+
 variable "windows_host_ami" {
   description = "AMI for windows host"
   type        = string

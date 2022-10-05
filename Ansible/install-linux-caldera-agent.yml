@@ -3,3 +3,7 @@
   - role: install-linux-caldera-agent
     vars:
       dir: '{{ node_app_dir }}/install-linux-caldera-agent/'
+#  - role: install-linux-agents
+#    vars:
+#      dir: '{{ node_app_dir }}/install-linux-agents/'
+

@@ -34,6 +34,7 @@ jobs:
 
       ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
       TF_DATA_DIR: ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra
+      VAR_DATA_DIR: ${{ github.WORKSPACE }}/account_variables
     outputs:
       server-ip: ${{ steps.caldera-outputs.outputs.ip }}
     steps:
@@ -45,19 +46,13 @@ jobs:
         python-version: "3.8"
     - name: Install AWS cli
       if: inputs.cloud == 'AWS'
-      run: |
-        python -m pip install --upgrade pip
-        pip install awscli==1.25.26
-    - name: Install Terraform
-      env:
-        TERRAFORM_VERSION: "1.2.4"
-      run: |
-        sudo apt update
-        sudo apt install -y zip
-        tf_version=$TERRAFORM_VERSION
-        wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
-        unzip terraform_"$tf_version"_linux_amd64.zip
-        sudo mv terraform /usr/local/bin/
+      uses: aws-actions/setup-sam@v2
+      with:
+        version: 1.53.0
+    - name: Install terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.2.4
     - name: Verify Terraform version
       run: |
         terraform --version
@@ -74,8 +69,10 @@ jobs:
         terraform validate
     - name: Terraform plan destroy
       run: |
+        if [ "${{ inputs.cloud }}" = "AWS" ] ; then export TARGET=""; fi
+        if [ "${{ inputs.cloud }}" = "AZURE" ] ; then export TARGET=""; fi
         cd ${{ env.TF_DATA_DIR }}
-        terraform plan -destroy  -out=deploy.tfplan
+        terraform plan $TARGET --var-file=${{ env.VAR_DATA_DIR }}/${{ inputs.account }}.tfvars -out=deploy.tfplan -destroy
     - name: Terraform destroy
       run: |
         cd ${{ env.TF_DATA_DIR }}
