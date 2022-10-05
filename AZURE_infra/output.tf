@@ -35,3 +35,8 @@ output "linux_host_ip" {
   description = "Internal linux host address"
   value = azurerm_linux_virtual_machine.linux_host.private_ip_address
 }
+
+
+#############################################################################
+### Windows host outputs
+#############################################################################
