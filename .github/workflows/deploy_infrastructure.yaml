@@ -19,7 +19,7 @@ on:
         description: 'Cloud to deploy against'
         type: choice
         required: true
-        default: "AZURE"
+        default: "AWS"
         options:
         - AWS
         - AZURE
