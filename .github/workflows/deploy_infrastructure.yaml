@@ -72,6 +72,10 @@ jobs:
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.2.4
+    - name: Install JQ
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq
 #    - name: Install Terraform
 #      env:
 #        TERRAFORM_VERSION: "1.2.4"
@@ -141,7 +145,7 @@ jobs:
 
   ansible-install-caldera:
     runs-on: ubuntu-20.04
-    needs: [wait-caldera-ssh]
+    needs: [wait-caldera-ssh, deploy-caldera-server]
     env:
       ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
       ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
@@ -163,6 +167,7 @@ jobs:
     - name: Generate enviroment files
       run: |
         export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        #export SERVER_IP=$(cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.caldera_server_ip.value)
         echo server $SERVER_IP
         echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
         cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
