@@ -34,7 +34,7 @@ module "azure_rsa_key" {
   az_location       = var.az_localization
   az_resource_group = var.az_resource_group
   rsa_key_name      = var.rsa_key_name
-  depends_on        = [module.vnet]
+#  depends_on        = [module.vnet]
 }
 
 data "azurerm_ssh_public_key" "existing_ssh" {
