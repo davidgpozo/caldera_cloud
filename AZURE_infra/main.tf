@@ -47,7 +47,7 @@ data "azurerm_ssh_public_key" "existing_ssh" {
 ### Caldera server
 #############################################################################
 resource "azurerm_network_security_group" "caldera_nsg" {
-  name                = "${var.az_prefix}-${var.az_caldera_server_name}-nsg"
+  name                = "${var.az_prefix}-${var.az_caldera_name}-nsg"
   resource_group_name = var.az_resource_group
   location            = var.az_localization
 
@@ -76,7 +76,7 @@ resource "azurerm_network_security_group" "caldera_nsg" {
 }
 
 resource "azurerm_public_ip" "caldera_public_ip" {
-  name                    = "${var.az_prefix}-${var.az_caldera_server_name}-ip"
+  name                    = "${var.az_prefix}-${var.az_caldera_name}-ip"
   location                = var.az_localization
   resource_group_name     = var.az_resource_group
   allocation_method       = "Static"
