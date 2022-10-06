@@ -196,10 +196,13 @@ jobs:
   wait-caldera-server:
     runs-on: ubuntu-20.04
     needs: [ansible-install-caldera]
+    env:
+      ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
     steps:
     - name: Wait for service
       run: |
-        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        #export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        export SERVER_IP=$(cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.caldera_server_ip.value)
         echo $SERVER_IP
         while ! curl -H "KEY:redAPIKeySantander22" http://$SERVER_IP:2288/api/v2/agents &>/dev/null; do echo "Curl Fail - `date`" && sleep 1; done
 
@@ -303,7 +306,8 @@ jobs:
         sudo apt install -y ansible jq
     - name: Generate enviroment files
       run: |
-        echo ubuntu@${{ needs.deploy-caldera-server.outputs.server-ip }} > ${{ env.ANSIBLE_HOST }}
+        export SERVER_IP=$(cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.caldera_server_ip.value)
+        echo ubuntu@$SERVER_IP > ${{ env.ANSIBLE_HOST }}
         cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.rsa_private_key.value > ${{ env.CALDERA_KEY }}
         chmod 600 ${{ env.CALDERA_KEY }}
     - name: Install netcat on caldera server
