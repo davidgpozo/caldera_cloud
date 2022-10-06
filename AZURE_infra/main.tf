@@ -158,7 +158,7 @@ resource "azurerm_network_security_group" "linux_nsg" {
 }
 
 resource "azurerm_network_interface" "linux_nic" {
-  name                = "${var.az_prefix}-${var.az_caldera_name}-nic"
+  name                = "${var.az_prefix}-${var.az_linux_host_name}-nic"
   location            = var.az_localization
   resource_group_name = var.az_resource_group
 
