@@ -364,6 +364,6 @@ jobs:
         ansible-playbook -i ${{ env.ANSIBLE_HOST }} \
         --private-key ${{ env.CALDERA_KEY }}_bck \
         --extra-vars="caldera_server=http://${CALDERA_INT_IP}:2288" \
+        install-linux-caldera-agent.yml
         #--extra-vars="agent_root_dir=${{ env.GITHUB_DIR_FILES }}" \
         #--extra-vars="qualys_license=${{ secrets[format('{0}_QUALYS', inputs.account)] }}" \
-        install-linux-caldera-agent.yml
