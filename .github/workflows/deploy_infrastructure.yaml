@@ -192,7 +192,7 @@ jobs:
 
   wait-caldera-server:
     runs-on: ubuntu-20.04
-    needs: [ansible-install-caldera]
+    needs: [ansible-install-caldera, deploy-caldera-server]
     steps:
     - name: Wait for service
       run: |
@@ -280,7 +280,7 @@ jobs:
 
   wait-hosts-ssh:
     runs-on: ubuntu-20.04
-    needs: [deploy-caldera-hosts, ansible-install-caldera]
+    needs: [deploy-caldera-hosts, ansible-install-caldera, deploy-caldera-server]
     env:
       ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
       ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
@@ -316,7 +316,7 @@ jobs:
 
   ansible-install-hosts:
     runs-on: ubuntu-20.04
-    needs: [wait-caldera-server, wait-hosts-ssh]
+    needs: [wait-caldera-server, wait-hosts-ssh, deploy-caldera-server, deploy-caldera-hosts]
     env:
       ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
       ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
