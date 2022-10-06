@@ -128,6 +128,11 @@ jobs:
     env:
       ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
     steps:
+    - name: Check out the code
+      uses: actions/checkout@v3
+    - name: Ensure pull the code
+      run: |
+        git pull
     - name: Install netcat
       run: |
         sudo apt update
