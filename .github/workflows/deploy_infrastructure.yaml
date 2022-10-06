@@ -125,6 +125,8 @@ jobs:
   wait-caldera-ssh:
     runs-on: ubuntu-20.04
     needs: [deploy-caldera-server]
+    env:
+      ENVIRONMENT: ${{ format('{0}_{1}', inputs.cloud, inputs.account) }}
     steps:
     - name: Install netcat
       run: |
@@ -132,7 +134,8 @@ jobs:
         sudo apt install netcat -y
     - name: Wait for ssh
       run: |
-        export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        #export SERVER_IP=${{ needs.deploy-caldera-server.outputs.server-ip }}
+        export SERVER_IP=$(cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.caldera_server_ip.value)
         echo server $SERVER_IP
         # Exit if IP variable is empty
         [[ -z "$SERVER_IP" ]] && echo "ERROR: Missing IP" && exit 1
@@ -274,7 +277,7 @@ jobs:
 
   wait-hosts-ssh:
     runs-on: ubuntu-20.04
-    needs: [deploy-caldera-hosts]
+    needs: [deploy-caldera-hosts, ansible-install-caldera]
     env:
       ANSIBLE_DATA_DIR: ${{ github.WORKSPACE }}/Ansible
       ANSIBLE_HOST: ${{ github.WORKSPACE }}/hosts
