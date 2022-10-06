@@ -186,10 +186,11 @@ jobs:
       run: |
         cd ${{ env.ANSIBLE_DATA_DIR }}
         export ANSIBLE_HOST_KEY_CHECKING=false
-        ansible-playbook -i ${{ env.ANSIBLE_HOST }} \
+        #ansible-playbook -i ${{ env.ANSIBLE_HOST }} \
         #--extra-vars="agent_root_dir=${{ env.GITHUB_DIR_FILES }}" \
         #--extra-vars="qualys_license=${{ secrets[format('{0}_QUALYS', inputs.account)] }}" \
-        install-caldera-server.yml
+        #install-caldera-server.yml
+        ansible-playbook -i ${{ env.ANSIBLE_HOST }} install-caldera-server.yml
 
   wait-caldera-server:
     runs-on: ubuntu-20.04
