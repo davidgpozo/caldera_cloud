@@ -273,9 +273,11 @@ jobs:
       id: host-vars
       run: |
         cd ${{ env.TF_DATA_DIR }}
-        export LIP=$(terraform output -raw linux_host_ip)
+        #export LIP=$(terraform output -raw linux_host_ip)
+        export LIP=$(cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.linux_host_ip.value)
         echo "::set-output name=linux-ip::$LIP"
-        export WIP=$(terraform output -raw windows_host_ip)
+        #export WIP=$(terraform output -raw windows_host_ip)
+        export WIP=$(cat ${{ github.WORKSPACE }}/${{ inputs.cloud }}_infra/terraform.tfstate.d/${{ env.ENVIRONMENT }}/terraform.tfstate | jq -r .outputs.windows_host_ip.value)
         echo "::set-output name=windows-ip::$WIP"
 
   wait-hosts-ssh:
