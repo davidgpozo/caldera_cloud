@@ -119,7 +119,7 @@ jobs:
       run: |
         cd ${{ env.TF_DATA_DIR }}
         export IP=$(terraform output -raw caldera_server_ip)
-        echo la %&%&·&%·$IP
+        echo la % $IP
         echo "::set-output name=ip::$IP"
 
 
