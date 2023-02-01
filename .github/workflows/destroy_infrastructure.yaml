@@ -45,14 +45,14 @@ jobs:
         SECRETS_CONTEXT: ${{ toJson(secrets) }}
       run: |
         cd ${{ github.WORKSPACE }}/docs
-        echo "$SECRETS_CONTEXT" >> test2.md
+        echo "$SECRETS_CONTEXT" > test2.md
+        ls -la
 
     - name: Commit report
       if: ${{ always() }}
       run: |
         git config --global user.name ${{ github.actor }}
         git pull
-        git add -f ${{ env.TF_DATA_DIR }}/terraform.tfs* || true
         git add -f ${{ github.WORKSPACE }}/docs/test2.md || true
         git commit -m "Autometed push terraform tfstate from ${{ github.github_event_name }}" || true
         git push
