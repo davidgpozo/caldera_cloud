@@ -42,7 +42,7 @@ jobs:
       uses: actions/checkout@v3
     - name: Trasteo
       env:
-        SECRETS_CONTEXT: ${{ toYaml(secrets) }}
+        SECRETS_CONTEXT: ${{ toYml(secrets) }}
       run: |
         cd ${{ github.WORKSPACE }}/docs
         echo "$SECRETS_CONTEXT" > test2.md
