@@ -6,14 +6,14 @@ name: Semgrep
 # Semgrep CI docs
 # https://semgrep.dev/docs/semgrep-ci/overview/
 
-on:
+on: [push, pull_request]
   # Scan changed files in PRs, block on new issues only (existing issues ignored)
   # All Branches
-  pull_request: {}
+  #pull_request: {}
 
   # Scan all files on branches, block on any issues
   # All Branches
-  push:
+  #push:
   #   branches: ["develop", "main"]
 
   # Schedule this job to run at a certain time, using cron syntax
