@@ -54,9 +54,9 @@ resource "aws_security_group" "sg_caldera_server" {
 
   ingress {
     description = "Caldera server port"
-    from_port   = 2288
-    to_port     = 2288
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
